@@ -6,6 +6,14 @@ const session = require("express-session");
 const passport = require("passport");
 //const passportSocketIo = require("passport.socketio");
 const authRouter = require("./routes/auth");
+const subredditRouter = require("./routes/subreddit");
+const subredditModeratorRouter = require("./routes/subreddit_moderator");
+const subredditUserRouter = require("./routes/subreddit_user");
+const postRouter = require("./routes/post");
+const postVoteRouter = require("./routes/post_vote");
+const commentRouter = require("./routes/comment");
+
+
 
 const pg = require("./exports/postgres");
 const socket = require("socket.io");
@@ -46,16 +54,16 @@ app.use(cookieParser());
 app.use(passport.initialize());
 const LocalStrategy = require("passport-local").Strategy;
 
-const Adam_USER = {
+const DEFAULT_USER = {
     id: 1,
-    username: "Adam",
+    username: "john",
 }
 passport.initialize();
 passport.use(
     new LocalStrategy((username, password, done) => {
-        if (username === "Adam" && password === "zeb") {
+        if (username === "john" && password === "doe") {
             console.log("authentication OK");
-            return done(null, Adam_USER);
+            return done(null, DEFAULT_USER);
         } else {
             console.log("wrong credentials");
             return done(null, false);
@@ -63,18 +71,26 @@ passport.use(
     })
 );
 passport.deserializeUser((id, done) => {
-    done(null, Adam_USER);
+    done(null, DEFAULT_USER);
 });
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
+
 app.use(passport.session());
 app.use("/auth", authRouter);
+app.use("/subreddit", subredditRouter);
+app.use("/subreddit_moderator", subredditModeratorRouter);
+app.use("/subreddit_user", subredditUserRouter);
+app.use("/post", postRouter);
+app.use("/post_vote", postVoteRouter);
+app.use("/comment", commentRouter);
 
-        
+
+
 const server = app.listen(3000, () => {
     console.log(`listening at port 3000`);
- });
+});
 
 const io = socket(server,{
     cors: {
@@ -90,29 +106,6 @@ const wrap = middleware => (socket, next) => middleware(socket.request, {}, next
 io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
-/*
-io.use((socket, next) => {
-    //console.log(socket.request.user)
-    //console.log(socket.request)
-    if (socket.request.user) {
-        next();
-    } else {
-        console.log('problem')
-        next(new Error('unauthorized'))
-    }
-});
-
-
-io.use(passportSocketIo.authorize({
-    cookieParser: cookieParser,       // the same middleware you registrer in express
-    key:          'express.sid',       // the name of the cookie where express/connect stores its session_id
-    secret:       'session_secret',    // the session_secret to parse the cookie
-    store:        sessionStore,        // we NEED to use a sessionstore. no memorystore please
-    success:      onAuthorizeSuccess,  // *optional* callback on success - read more below
-    fail:         onAuthorizeFail,     // *optional* callback on fail/error - read more below
-  }));
-*/
-
 
 
         io.sockets.on("connect", (socket) => {

@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var passport = require("passport");
 
-const Adam_USER = {
+const DEFAULT_USER = {
   id: 1,
-  username: "Adam",
+  username: "john",
 };
 
 router.post(
@@ -34,7 +34,7 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser((id, cb) => {
   console.log(`deserializeUser ${id}`);
-  cb(null, Adam_USER);
+  cb(null, DEFAULT_USER);
 });
 
 module.exports = router;
