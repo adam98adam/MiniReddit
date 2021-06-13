@@ -12,7 +12,9 @@ const subredditUserRouter = require("./routes/subreddit_user");
 const postRouter = require("./routes/post");
 const postVoteRouter = require("./routes/post_vote");
 const commentRouter = require("./routes/comment");
-
+const surveyRouter = require("./routes/survey");
+const surveyAnswerRouter = require("./routes/survey_answer");
+const surveyUserAnswerRouter = require("./routes/survey_user_answer");
 
 
 const pg = require("./exports/postgres");
@@ -85,6 +87,9 @@ app.use("/subreddit_user", subredditUserRouter);
 app.use("/post", postRouter);
 app.use("/post_vote", postVoteRouter);
 app.use("/comment", commentRouter);
+app.use("/survey", surveyRouter);
+app.use("/survey_answer", surveyAnswerRouter);
+app.use("/survey_user_answer", surveyUserAnswerRouter);
 
 
 
