@@ -9,6 +9,16 @@ const authRouter = require("./routes/auth");
 const redditUserRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
 const userRoleRouter = require("./routes/user_role");
+const subredditRouter = require("./routes/subreddit");
+const subredditModeratorRouter = require("./routes/subreddit_moderator");
+const subredditUserRouter = require("./routes/subreddit_user");
+const postRouter = require("./routes/post");
+const postVoteRouter = require("./routes/post_vote");
+const commentRouter = require("./routes/comment");
+const surveyRouter = require("./routes/survey");
+const surveyAnswerRouter = require("./routes/survey_answer");
+const surveyUserAnswerRouter = require("./routes/survey_user_answer");
+
 
 const pg = require("./exports/postgres");
 const socket = require("socket.io");
@@ -54,12 +64,7 @@ const REDDIT_USER = {
     id: 0,
     nickname: "",
 }
-/*
-const Adam_USER = {
-    id: 1,
-    username: "Adam",
-}
-*/
+
 passport.initialize();
 passport.use(
     new LocalStrategy(async (username, password, done) => {
@@ -109,12 +114,21 @@ app.use("/auth", authRouter);
 app.use("/user",redditUserRouter);
 app.use("/role",roleRouter);
 app.use("/user_role",userRoleRouter);
+app.use("/subreddit", subredditRouter);
+app.use("/subreddit_moderator", subredditModeratorRouter);
+app.use("/subreddit_user", subredditUserRouter);
+app.use("/post", postRouter);
+app.use("/post_vote", postVoteRouter);
+app.use("/comment", commentRouter);
+app.use("/survey", surveyRouter);
+app.use("/survey_answer", surveyAnswerRouter);
+app.use("/survey_user_answer", surveyUserAnswerRouter);
 
 
-        
+
 const server = app.listen(3000, () => {
     console.log(`listening at port 3000`);
- });
+});
 
 const io = socket(server,{
     cors: {
@@ -130,7 +144,6 @@ const wrap = middleware => (socket, next) => middleware(socket.request, {}, next
 io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
-
 
 io.sockets.on("connect", (socket) => {
     console.log("Socket.io: connected",socket.id)
