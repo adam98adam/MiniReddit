@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- <Navbar/> -->
         <LoginButton :logged="isLogged()"/>
         <LogoutButton/>
           <div class="buttons">
@@ -12,11 +13,11 @@
 </template>
 
 <script>
-import PostRouter from '../components/PostRouter'
 import LoginButton from '../components/LoginButton.vue'
 import LogoutButton from '../components/LogoutButton.vue'
+import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
-//import axios from '../services/axios'
+import axios from '../services/axios'
 
 
 
@@ -34,9 +35,9 @@ export default {
     } 
   },
   components: {
-    PostRouter,
     LoginButton,
-    LogoutButton
+    LogoutButton,
+    PostRouter
   },
   methods: {
     async getAll() {
@@ -52,7 +53,8 @@ export default {
   computed: {
 
   },
-  created(){ 
+  async created(){ 
+    console.log(await axios.get("http://localhost:3000/user/"))
         this.getAll();
             socket.on('getData',async (posts) => {
                 console.log(posts.rows)
@@ -61,7 +63,9 @@ export default {
                 this.posts = this.posts.filter(x => x.checked === false)
                 console.log(this.posts)
             })
+  
         }
+        
 }
       
 

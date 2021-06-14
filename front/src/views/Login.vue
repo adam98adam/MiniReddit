@@ -1,8 +1,8 @@
 <template>
     <div class="main container">
         <div>
-            <label for="login">Login : </label>
-            <input type="text" id="login" name="login" v-model="login"> 
+            <label for="nickname">Nickname : </label>
+            <input type="text" id="nickname" name="nickname" v-model="nickname"> 
         </div>
         &nbsp;
         <div>
@@ -14,7 +14,7 @@
         </div>
         &nbsp;
         <div>   
-        <button type="button" class="btn btn-success" @click="log()">Log in</button>
+        <button type="button" class="btn btn-success" @click="login()">Log in</button>
         </div>
     </div>
 </template>
@@ -30,7 +30,7 @@ export default {
   data() {
     {
       return {
-        login:"",
+        nickname:"",
         password:"",
         port:3000,
         error: null
@@ -44,9 +44,9 @@ export default {
   
   },
   methods: {
-      log: async function() {
+      login: async function() {
           await axios.post("/auth/login", {
-              username: this.login, 
+              username: this.nickname, 
               password: this.password
           }).then((res) => {
               console.log(res);
