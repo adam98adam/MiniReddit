@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.get('/:id',async (req, res) => {
+router.get('/id=:id',async (req, res) => {
     const reddit_user = await client.query("select * from reddit_user where id = $1", [
         req.params.id,
     ])
@@ -25,7 +25,7 @@ router.get('/:id',async (req, res) => {
 })
 
 
-router.get("/:nickname",async (req, res) => {
+router.get("/nickname=:nickname",async (req, res) => {
     const reddit_user = await client.query("select * from reddit_user where nickname = $1", [
         req.params.nickname,
     ])
@@ -36,8 +36,19 @@ router.get("/:nickname",async (req, res) => {
     return res.status(404).send("User not found")
 })
 
+router.get("/email=:email",async (req, res) => {
+    const reddit_user = await client.query("select * from reddit_user where email = $1", [
+        req.params.email,
+    ])
 
-router.put('/:id',isAuthenticated, async (req, res) => {
+    if(reddit_user.rows[0])
+        return res.send(reddit_user.rows[0])
+
+    return res.status(404).send("User not found")
+})
+
+
+router.put('/id=:id',isAuthenticated, async (req, res) => {
          await client.query(
         "update reddit_user set nickname = $1, password = $2, email = $3 where id = $4",
         [req.body.Nickname, req.body.Password, req.body.Email, req.params.id]

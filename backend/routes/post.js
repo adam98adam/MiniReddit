@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No post found");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const post = await client.query(
         "select * from post where id = $1;",
         [req.params.id]
@@ -24,6 +24,35 @@ router.get('/:id', async (req, res) => {
 
     return res.status(404).send("No post found.");
 });
+
+router.get('/user_id=:user_id', async (req, res) => {
+    const post = await client.query(
+        "select * from post where user_id = $1;",
+        [req.params.user_id]
+    );
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found.");
+});
+
+router.get('/subreddit_id=:subreddit_id', async (req, res) => {
+    const post = await client.query(
+        "select * from post where subreddit_id = $1;",
+        [req.params.subreddit_id]
+    );
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found.");
+});
+
+
+
+
+//Do przejrzenia
 
 router.post("/new", async (req, res) => {
     const postId = await client.query(
@@ -38,7 +67,9 @@ router.post("/new", async (req, res) => {
     return res.send(post.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+//Do przejrzenia
+
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update post set title=$2, content=$3, image_path=$4, video_url=$5, creation_date=$6, subreddit_id=$7, user_id=$8 where id=$1;",
         [req.params.id, req.body.Title, req.body.Content, req.body.Image_path, req.body.Video_url, req.body.Creation_date, req.body.Subreddit_id, req.body.User_id]
@@ -52,7 +83,9 @@ router.put("/:id", async (req, res) => {
     return res.send(getPost.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+
+//Klucz Obcy
+router.delete("/id=:id", async (req, res) => {
     const post = await client.query(
         "select * from post where id = $1",
         [req.params.id]

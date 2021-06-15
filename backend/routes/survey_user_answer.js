@@ -13,10 +13,34 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No survey user answer found");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const surveyUserAnswer = await client.query(
         "select * from survey_user_answer where id = $1;",
         [req.params.id]
+    );
+
+    if(surveyUserAnswer.rows)
+        return res.send(surveyUserAnswer.rows);
+
+    return res.status(404).send("No survey user answer found.");
+});
+
+router.get('/answer_id=:answer_id', async (req, res) => {
+    const surveyUserAnswer = await client.query(
+        "select * from survey_user_answer where answer_id = $1;",
+        [req.params.answer_id]
+    );
+
+    if(surveyUserAnswer.rows)
+        return res.send(surveyUserAnswer.rows);
+
+    return res.status(404).send("No survey user answer found.");
+});
+
+router.get('/user_id=:user_id', async (req, res) => {
+    const surveyUserAnswer = await client.query(
+        "select * from survey_user_answer where user_id = $1;",
+        [req.params.user_id]
     );
 
     if(surveyUserAnswer.rows)
@@ -38,7 +62,7 @@ router.post("/new", async (req, res) => {
     return res.send(surveyUserAnswer.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update survey_user_answer set answer_id=$2, user_id=$3 where id=$1;",
         [req.params.id, req.body.Answer_id, req.body.User_id]
@@ -52,7 +76,7 @@ router.put("/:id", async (req, res) => {
     return res.send(getSurvey.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/id=:id", async (req, res) => {
     const surveyUserAnswer = await client.query(
         "select * from survey_user_answer where id = $1",
         [req.params.id]

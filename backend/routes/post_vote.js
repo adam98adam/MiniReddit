@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No post vote found");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const postVote = await client.query(
         "select * from post_vote where id = $1;",
         [req.params.id]
@@ -24,6 +24,38 @@ router.get('/:id', async (req, res) => {
 
     return res.status(404).send("No post vote found.");
 });
+
+
+
+router.get('/user_id=:user_id', async (req, res) => {
+    const postVote = await client.query(
+        "select * from post_vote where user_id = $1;",
+        [req.params.user_id]
+    );
+
+    if(postVote.rows)
+        return res.send(postVote.rows);
+
+    return res.status(404).send("No post vote found.");
+});
+
+router.get('/post_id=:post_id', async (req, res) => {
+    const postVote = await client.query(
+        "select * from post_vote where post_id = $1;",
+        [req.params.post_id]
+    );
+
+    if(postVote.rows)
+        return res.send(postVote.rows);
+
+    return res.status(404).send("No post vote found.");
+});
+
+
+
+
+
+
 
 router.post("/new", async (req, res) => {
     const postVoteId = await client.query(
@@ -38,7 +70,7 @@ router.post("/new", async (req, res) => {
     return res.send(postVote.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update post_vote set vote=$2, user_id=$3, post_id=$4 where id=$1;",
         [req.params.id, req.body.Vote, req.body.User_id, req.body.Post_id]
@@ -52,7 +84,7 @@ router.put("/:id", async (req, res) => {
     return res.send(getPostVote.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/id=:id", async (req, res) => {
     const postVote = await client.query(
         "select * from post_vote where id = $1",
         [req.params.id]

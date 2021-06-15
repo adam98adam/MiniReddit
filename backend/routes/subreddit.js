@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No subreddit found.");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const subreddit = await client.query(
         "select * from subreddit where id = $1;",
         [req.params.id]
@@ -38,7 +38,7 @@ router.post("/new", async (req, res) => {
     return res.send(newSubreddit.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update subreddit set name=$2, description=$3 where id=$1;",
         [req.params.id, req.body.Name, req.body.Description]
@@ -52,7 +52,9 @@ router.put("/:id", async (req, res) => {
     return res.send(getSubreddit.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+
+//Klucz obcy
+router.delete("/id=:id", async (req, res) => {
     const subreddit = await client.query(
         "select * from subreddit where id = $1",
         [req.params.id]

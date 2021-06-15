@@ -13,11 +13,11 @@ router.get('/', async (req, res) => {
 
 router.get('/user_id=:user_id',async (req, res) => {
     const user_role = await client.query("select * from user_role where user_id = $1", [
-        req.params.id,
+        req.params.user_id,
     ])
 
     if(user_role.rows[0])
-        return res.send(reddit_user.rows[0])
+        return res.send(user_role.rows[0])
 
     return res.status(404).send("User_role not found")
 })
