@@ -62,6 +62,14 @@ router.put('/id=:id',isAuthenticated, async (req, res) => {
 
 
 router.post('/', async (req,res) => {
+
+    const reddit_user = await client.query("select * from reddit_user where nickname = $1 or email = $2", [
+        req.body.Nickname,req.body.Email
+    ])
+
+    if(reddit_user.rows[0])
+        return res.status(401).send("User with given nickname or email is already registered")
+
     const id = await client.query("insert into reddit_user(nickname, activation_guid, activation_expire_date, password, email) values ($1, NULL, NULL, $2, $3) RETURNING ID;",
     [req.body.Nickname,req.body.Password,req.body.Email])
 

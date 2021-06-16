@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import AddPost from '../views/AddPost.vue'
 import ListPost from '../views/ListPost.vue'
 import Login from '../views/Login.vue'
+import Register from '../views/Register'
 
 
 const routes = [
@@ -11,6 +12,11 @@ const routes = [
         name: 'Home',
         component: Home
 
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     },
     {
         path: '/login',
