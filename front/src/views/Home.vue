@@ -1,20 +1,14 @@
 <template>
     <div>
-        <!-- <Navbar/> -->
-        <LoginButton :logged="isLogged()"/>
-        <LogoutButton/>
-          <div class="buttons">
-              <button @click="$router.push('/list')">All posts</button>
-              <button v-if="isLogged()" @click="$router.push('/new')">Add new posts</button>
-              <!-- <button @click="dis()">Disconnect</button> -->
-        </div>
-        <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content" :checked="post.checked" :editable="editable"/>
+        <Navbar/>
+        <div class="posts">
+          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
+      </div>
     </div>
 </template>
 
 <script>
-import LoginButton from '../components/LoginButton.vue'
-import LogoutButton from '../components/LogoutButton.vue'
+import Navbar from '../components/Navbar.vue'
 import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
@@ -35,9 +29,8 @@ export default {
     } 
   },
   components: {
-    LoginButton,
-    LogoutButton,
-    PostRouter
+    Navbar,
+    PostRouter,
   },
   methods: {
     async getAll() {
@@ -59,9 +52,11 @@ export default {
             socket.on('getData',async (posts) => {
                 console.log(posts.rows)
                 this.posts = posts.rows
-                this.posts.sort((a,b)=>a.id-b.id)
-                this.posts = this.posts.filter(x => x.checked === false)
-                console.log(this.posts)
+                //this.posts.sort((a,b)=>a.id-b.id)
+                //this.posts = this.posts.filter(x => x.checked === false)
+                //this.posts.forEach(element => {
+                 // console.log(element)                 
+                //});
             })
   
         }
@@ -75,12 +70,9 @@ export default {
 
 <style>
 
-.buttons {
-    display: flex;
-    justify-content: center;
+.posts{
+  margin-top: 50px;
 }
 
-.buttons > router-link {
-    margin: 6px;
-}
+
 </style>

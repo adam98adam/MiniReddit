@@ -1,28 +1,29 @@
 <template>
     <div class="container">
-					<form>
-						<div class="form-group">
-							<h2>Login</h2>
-						</div>
-						<div class="form-group">
-							<label  for="nickname">Nickname</label><br>
-							<input  v-model="nickname" id="nickname" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label  for="password">Password</label><br>
-							<input v-model="password" id="password" type="password" class="form-control">
-						</div>
-                        <div class="form-group">
-                           <button @click="login()" id="signupSubmit" class="btn btn-info">Log in</button>
-                        </div>
-                        <HomeButton/>
-                        <div id="error-message" v-if="errorMessage.isVisible" >
-                            {{ errorMessage.content }}
-                        </div> 
-						<hr>
-						<p>Don't have an account? <button @click="$router.push('/register')" id="button" type="button"  class="btn btn-danger">Register</button></p>
-					</form>
-		
+		<form>
+			<div class="form-group">
+				<h2>Change Password</h2>
+			</div>
+			<div class="form-group">
+				<label  for="nickname">Old Password</label><br>
+				<input  v-model="oldPassword" id="oldPassword" type="password" class="form-control">
+			</div>
+			<div class="form-group">
+          <label  for="newPassword">New Password</label><br>
+          <input v-model="newPassword" id="newPassword" type="password" class="form-control">
+			</div>
+      <div class="form-group">
+          <label  for="confirmPassword">Confirm Password</label><br>
+          <input v-model="confirmPassword" id="confrimPassword" type="password" class="form-control">
+			</div>
+      <div class="form-group">
+        <button @click="changePassword()" id="changePassword" class="btn btn-info">Change Password</button>
+      </div>
+      <HomeButton/>
+      <div id="error-message" v-if="errorMessage.isVisible" >
+        {{ errorMessage.content }}
+      </div> 
+		</form>
 	</div>
 </template>
 
@@ -33,12 +34,13 @@ import axios from '../services/axios'
 
 
 export default {
-  name: 'Login',
+  name: 'EditUser',
   data() {
     {
       return {
-        nickname:"",
-        password:"",
+        oldPassword:"",
+        newPassword:"",
+        confirmPassword:"",
         errorMessage: {
             isVisible: false,
             content:""
@@ -59,19 +61,20 @@ export default {
             this.errorMessage.isVisible = false;
         }, 6000);
       },
-      async login() {
-          await axios.post("/auth/login", {
-              username: this.nickname, 
-              password: this.password
+      async changePassword() {
+          await axios.put("/user", {
+              OldPassword: this.oldPassword,
+              NewPassword: this.newPassword,
+              ConfirmPassword:this.confirmPassword
           }).then((res) => {
               console.log(res);
               this.$router.push("/");
               //document.cookie = "isLogged=true"
               //sessionStorage.setItem("isLogged", "true")
-              localStorage.setItem("isLogged", "true")   
+              //localStorage.setItem("isLogged", "true")   
           }).catch((error) => {
               console.log(error)
-              this.showErrorMessage("Wrong Credentials")
+              this.showErrorMessage(error.response.data)
           })
       }
     //async getAll() {

@@ -152,7 +152,7 @@ io.sockets.on("connect", (socket) => {
         console.log("Socket:io: disconnected")
     })
     socket.on("getData",async () => {
-        const posts = await pg.query("SELECT * FROM posts");
+        const posts = await pg.query("SELECT * FROM post");
         io.sockets.emit('getData',posts) 
     })
      socket.on("addPost",async (data) => { 
