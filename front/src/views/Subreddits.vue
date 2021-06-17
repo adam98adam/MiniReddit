@@ -1,24 +1,24 @@
 <template>
     <div>
         <Navbar/>
-        <div class="posts">
-            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
+        <div class="subreddits">
+            <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
         </div>
     </div>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue'
-import PostRouter from '../components/PostRouter'
+import SubredditRouter from '../components/SubredditRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
 
 export default {
-    name: 'Home',
+    name: 'Subreddits',
     data() {
         {
             return {
-                posts:[],
+                subreddits:[],
                 port:3000,
                 editable:false,
             }
@@ -26,11 +26,11 @@ export default {
     },
     components: {
         Navbar,
-        PostRouter,
+        SubredditRouter,
     },
     methods: {
         async getAll() {
-            socket.emit('getData');
+            socket.emit('getSubreddits');
         },
         isLogged() {
             return localStorage.getItem("isLogged");
@@ -40,16 +40,16 @@ export default {
     async created() { 
         console.log(await axios.get("http://localhost:3000/user/"));
         this.getAll();
-        socket.on('getData', async (posts) => {
-            console.log(posts.rows);
-            this.posts = posts.rows;
+        socket.on('getSubreddits', async (subreddits) => {
+            console.log(subreddits.rows);
+            this.subreddits = subreddits.rows;
         });
     }
 }
 </script>
 
 <style>
-.posts {
+.subreddits {
     margin-top: 50px;
 }
 </style>

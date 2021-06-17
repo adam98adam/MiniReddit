@@ -13,10 +13,22 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No survey found");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const survey = await client.query(
         "select * from survey where id = $1;",
         [req.params.id]
+    );
+
+    if(survey.rows)
+        return res.send(survey.rows);
+
+    return res.status(404).send("No survey found.");
+});
+
+router.get('/post_id=:post_id', async (req, res) => {
+    const survey = await client.query(
+        "select * from survey where post_id = $1;",
+        [req.params.post_id]
     );
 
     if(survey.rows)
@@ -38,7 +50,7 @@ router.post("/new", async (req, res) => {
     return res.send(survey.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update survey set question=$2, post_id=$3 where id=$1;",
         [req.params.id, req.body.Question, req.body.Post_id]
@@ -52,7 +64,9 @@ router.put("/:id", async (req, res) => {
     return res.send(getSurvey.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+
+//Klucz Obcy
+router.delete("/id=:id", async (req, res) => {
     const survey = await client.query(
         "select * from survey where id = $1",
         [req.params.id]

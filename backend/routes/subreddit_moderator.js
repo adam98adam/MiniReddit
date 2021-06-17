@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     return res.status(404).send("No subreddit moderator found.");
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id=:id', async (req, res) => {
     const subredditModerator = await client.query(
         "select * from subreddit_moderator where id = $1;",
         [req.params.id]
@@ -38,7 +38,7 @@ router.post("/new", async (req, res) => {
     return res.send(newSubredditModerator.rows[0]);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/id=:id", async (req, res) => {
     await client.query(
         "update subreddit_moderator set user_id=$2, subreddit_id=$3 where id=$1;",
         [req.params.id, req.body.User_id, req.body.Subreddit_id]
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
     return res.send(getSubredditModerator.rows[0]);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/id=:id", async (req, res) => {
     const subredditModerator = await client.query(
         "select * from subreddit_moderator where id = $1",
         [req.params.id]
