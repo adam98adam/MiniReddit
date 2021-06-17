@@ -1,6 +1,7 @@
 <template>
     <div>
         <Navbar/>
+        <h1>Subreddit list</h1>
         <div class="subreddits">
             <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
         </div>

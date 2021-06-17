@@ -1,6 +1,7 @@
 <template>
     <div>
         <Navbar/>
+        <h1>Home - all posts</h1>
         <div class="posts">
             <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
         </div>
