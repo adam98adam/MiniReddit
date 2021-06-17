@@ -2,7 +2,7 @@
     <div>
         <Navbar/>
         <div class="posts">
-          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
+          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :subreddit_id="post.subreddit_id" :user_id="post.user_id"/>
       </div>
     </div>
 </template>
@@ -43,21 +43,27 @@ export default {
    //     socket.disconnect();
     //}
   },
-  computed: {
+  //componentDidMount() {
 
-  },
+
   async created(){ 
-    console.log(await axios.get("http://localhost:3000/user/"))
-        this.getAll();
-            socket.on('getData',async (posts) => {
-                console.log(posts.rows)
-                this.posts = posts.rows
+    //console.log(await axios.get("http://localhost:3000/user/"))
+        const data = await axios.get("http://localhost:3000/post/")
+        //console.log(data.data)
+        this.posts = data.data
+        //console.log(posts)
+        //this.posts = data.rows
+        //console.log(this.posts)
+        //this.getAll();
+            //socket.on('getData',async (posts) => {
+                //console.log(posts.rows)
+                //this.posts = posts.rows
                 //this.posts.sort((a,b)=>a.id-b.id)
                 //this.posts = this.posts.filter(x => x.checked === false)
                 //this.posts.forEach(element => {
                  // console.log(element)                 
                 //});
-            })
+            //})
   
         }
         
@@ -71,7 +77,7 @@ export default {
 <style>
 
 .posts{
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 

@@ -68,6 +68,7 @@ export default {
               this.$router.push("/");
               //document.cookie = "isLogged=true"
               //sessionStorage.setItem("isLogged", "true")
+              localStorage.setItem("nickname",this.nickname)
               localStorage.setItem("isLogged", "true")   
           }).catch((error) => {
               console.log(error)
@@ -112,7 +113,7 @@ h2 {
 	margin-bottom: 2px;
 }
 .container {
-	background-color: rgba(6, 203, 238, 0.425);
+	background-color: greenyellow;
 	border: 3px solid black;
     margin-top: 20px;
 	max-width: 400px;

@@ -19,8 +19,8 @@ router.get('/id=:id', async (req, res) => {
         [req.params.id]
     );
 
-    if(subreddit.rows)
-        return res.send(subreddit.rows);
+    if(subreddit.rows[0])
+        return res.send(subreddit.rows[0]);
 
     return res.status(404).send("No subreddit found.");
 });
