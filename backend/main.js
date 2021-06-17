@@ -28,9 +28,9 @@ const sessionMiddleware = session({ secret: "changeit", resave: false, saveUnini
 const app = express();
 app.use(cors({
     origin: "http://localhost:8080",
-    credentials: true
+    credentials: true,
 }));
-app.use(sessionMiddleware)
+app.use(sessionMiddleware);
 app.use(express.json());
 //app.use(express.static('../public'))
 
@@ -46,7 +46,7 @@ const { Client } = require("pg");
 const client = new Client(dbConnData);
 console.log(dbConnData);
 (async () => {
-    await pg.query("CREATE TABLE IF NOT EXISTS posts (id SERIAL, content VARCHAR NOT NULL, checked BOOLEAN NOT NULL DEFAULT FALSE)")
+    await pg.query("CREATE TABLE IF NOT EXISTS post (id SERIAL, content VARCHAR NOT NULL, checked BOOLEAN NOT NULL DEFAULT FALSE)")
 })
 */
 
@@ -90,8 +90,8 @@ passport.deserializeUser(async (id, done) => {
     console.log("Reddit_User : " + JSON.stringify(REDDIT_USER))
     const reddit_user = await client.query(`select * from reddit_user where id = ${id}`)
     if(reddit_user.rows[0])
-      REDDIT_USER.id = id
-      REDDIT_USER.nickname = reddit_user.rows[0].nickname
+        REDDIT_USER.id = id;
+        REDDIT_USER.nickname = reddit_user.rows[0].nickname;
     done(null, REDDIT_USER);
 });
 
@@ -146,39 +146,46 @@ io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
 
 io.sockets.on("connect", (socket) => {
-    console.log("Socket.io: connected",socket.id)
+    console.log("Socket.io: connected",socket.id);
     //console.log("Polaczono")
     socket.on("disconnect",() => {
-        console.log("Socket:io: disconnected")
-    })
+        console.log("Socket:io: disconnected");
+    });
     socket.on("getData",async () => {
         const posts = await pg.query("SELECT * FROM post");
-        io.sockets.emit('getData',posts) 
-    })
-     socket.on("addPost",async (data) => { 
-        await pg.query(`INSERT INTO posts(content) VALUES ('${data.content}')`);
-        const posts = await pg.query("SELECT * FROM posts");
-        io.sockets.emit('getData',posts)    
-    })
-
+        io.sockets.emit('getData', posts);
+    });
+    socket.on("addPost",async (data) => {
+        await pg.query(`INSERT INTO post(content) VALUES ('${data.content}')`);
+        const posts = await pg.query("SELECT * FROM post");
+        io.sockets.emit('getData', posts);
+    });
     socket.on("editPost",async (data) => {
-        const post = await pg.query(`SELECT * FROM posts WHERE id = ${data.id}`)
-            if(post) {
-                await pg.query(`UPDATE posts SET content = '${data.content}',checked = '${data.checked}' WHERE id = ${data.id}`)
-            }
-            const posts = await pg.query("SELECT * FROM posts");
-            io.sockets.emit('getData',posts)
-    }),
-
-    socket.on("deletePost", async (id) => {
-        const post = await pg.query(`SELECT * FROM posts WHERE  id = ${id}`)
-        if(post) {
-            await pg.query(`DELETE FROM posts WHERE id = ${id}`)
+        const post = await pg.query(`SELECT * FROM post WHERE id = ${data.id}`)
+        if (post) {
+            await pg.query(`UPDATE post SET content = '${data.content}',checked = '${data.checked}' WHERE id = ${data.id}`)
         }
-        const posts = await pg.query("SELECT * FROM posts");
-        io.sockets.emit('getData',posts) 
-    })
-    
+        const posts = await pg.query("SELECT * FROM post");
+        io.sockets.emit('getData',posts);
+    });
+    socket.on("deletePost", async (id) => {
+        const post = await pg.query(`SELECT * FROM post WHERE  id = ${id}`)
+        if (post) {
+            await pg.query(`DELETE FROM post WHERE id = ${id}`);
+        }
+        const posts = await pg.query("SELECT * FROM post");
+        io.sockets.emit('getData',posts);
+    });
+
+
+
+    socket.on("getSubreddits",async () => {
+        const subreddits = await pg.query("SELECT * FROM subreddit");
+        io.sockets.emit('getSubreddits', subreddits);
+    });
+
+
+
     /*
     console.log(socket)
     const session = socket.request.session;

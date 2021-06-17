@@ -8,9 +8,9 @@ const MyFun = require('../exports/validation');
 
 router.get('/', async (req, res) => {
     const reddit_users = await client.query("select * from reddit_user");
-    console.log("user")
-    console.log(req.user)
-    return res.send(reddit_users.rows)
+    console.log("user");
+    console.log(req.user);
+    return res.send(reddit_users.rows);
 })
 
 

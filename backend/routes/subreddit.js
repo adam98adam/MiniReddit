@@ -7,10 +7,14 @@ router.get('/', async (req, res) => {
         "select * from subreddit;"
     );
 
-    if(subreddit.rows)
-        return res.send(subreddit.rows);
+    console.log("subreddit");
+    console.log(subreddit.rows);
+    return res.send(subreddit.rows);
 
-    return res.status(404).send("No subreddit found.");
+    // if(subreddit.rows)
+    //     return res.send(subreddit.rows);
+
+    // return res.status(404).send("No subreddit found.");
 });
 
 router.get('/id=:id', async (req, res) => {

@@ -1,13 +1,13 @@
 <template>
     <div class="block">
-            <p>Id: {{ id }} Content: {{ content }}</p> 
+            <p>Id: {{ id }} Name: {{ name }} Description: {{ description }}</p> 
     </div>
 </template>
 
 <script>
 export default {
-    name: 'PostRouter',
-    props: ['id', 'content'],
+    name: 'SubredditRouter',
+    props: ['id', 'name', 'description'],
     data() {
         {
             return {};
