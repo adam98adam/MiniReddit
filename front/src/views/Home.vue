@@ -23,6 +23,7 @@ export default {
   data() {
     {
       return {
+        orginalPosts:[],
         posts:[],
       }
     
@@ -43,12 +44,21 @@ export default {
     async searchPosts(content){
       if(content.subreddit)
       {
-        const data = await axios.get(`http://localhost:3000/post/subreddit=${content.content}`)
-        this.posts = data.data
+        //const data = await axios.get(`http://localhost:3000/post/subreddit=${content.content}`)
+        //this.posts = data.data
+        const reg = new RegExp(".*" + content.content +".*")
+        this.posts = this.orginalPosts.filter(post => {
+          return post.name.match(reg)
+        })
+
       }
       else{
-        const data = await axios.get(`http://localhost:3000/post/content=${content.content}`)
-        this.posts = data.data
+        //const data = await axios.get(`http://localhost:3000/post/content=${content.content}`)
+        //this.posts = data.data
+        const reg = new RegExp(".*" + content.content +".*")
+        this.posts = this.orginalPosts.filter(post => {
+         return  post.content.match(reg)
+        })
       }
     },
   },
@@ -57,6 +67,7 @@ export default {
         const data = await axios.get("http://localhost:3000/post/")
         //console.log(data.data)
         this.posts = data.data
+        this.orginalPosts = data.data
         //console.log(posts)
         //this.posts = data.rows
         //console.log(this.posts)
