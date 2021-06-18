@@ -51,7 +51,14 @@ router.get('/post_id=:post_id', async (req, res) => {
     return res.status(404).send("No post vote found.");
 });
 
+router.get('/counter/post_id=:post_id',async (req,res) => {
+    const count = await client.query(
+    "select count(*) from post_vote where vote = 1 and post_id = $1;",
+    [req.params.post_id])
 
+
+    return res.send(count.rows[0])
+})
 
 
 

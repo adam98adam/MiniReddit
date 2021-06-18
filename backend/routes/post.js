@@ -4,8 +4,30 @@ const client = require('../exports/postgres');
 
 router.get('/', async (req, res) => {
     const post = await client.query(
-        "select * from post;"
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id"
     );
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found");
+});
+
+router.get('/subreddit=:subreddit', async (req, res) => {
+    const post = await client.query(
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id  where s.name LIKE '%" + req.params.subreddit  + "%';" 
+    ,);
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found");
+});
+
+router.get('/content=:content', async (req, res) => {
+    const post = await client.query(
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id  where p.content LIKE '%" + req.params.content + "%';"
+    ,);
 
     if(post.rows)
         return res.send(post.rows);

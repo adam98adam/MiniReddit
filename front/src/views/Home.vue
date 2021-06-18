@@ -1,17 +1,20 @@
 <template>
     <div>
         <Navbar/>
+        <Search @searchPosts="searchPosts"/>
         <div class="posts">
-          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :subreddit_id="post.subreddit_id" :user_id="post.user_id"/>
+          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
       </div>
     </div>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue'
+import Search from '../components/Search.vue'
 import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
+
 
 
 
@@ -21,15 +24,13 @@ export default {
     {
       return {
         posts:[],
-        port:3000,
-        editable:false
-
       }
     
     } 
   },
   components: {
     Navbar,
+    Search,
     PostRouter,
   },
   methods: {
@@ -38,14 +39,19 @@ export default {
     },
     isLogged() {
       return localStorage.getItem("isLogged");
-    }
-  //  async dis() {
-   //     socket.disconnect();
-    //}
+    },
+    async searchPosts(content){
+      if(content.subreddit)
+      {
+        const data = await axios.get(`http://localhost:3000/post/subreddit=${content.content}`)
+        this.posts = data.data
+      }
+      else{
+        const data = await axios.get(`http://localhost:3000/post/content=${content.content}`)
+        this.posts = data.data
+      }
+    },
   },
-  //componentDidMount() {
-
-
   async created(){ 
     //console.log(await axios.get("http://localhost:3000/user/"))
         const data = await axios.get("http://localhost:3000/post/")
@@ -77,7 +83,7 @@ export default {
 <style>
 
 .posts{
-  margin-top: 100px;
+  margin-top: 20px;
 }
 
 
