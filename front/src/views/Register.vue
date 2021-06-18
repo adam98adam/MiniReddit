@@ -103,7 +103,7 @@ h2 {
 	margin-bottom: 2px;
 }
 .container {
-	background-color: rgba(6, 203, 238, 0.425);
+	background-color: greenyellow;
 	border: 3px solid black;
 	margin-top: 20px;
 	max-width: 400px;

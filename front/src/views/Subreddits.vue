@@ -1,7 +1,9 @@
 <template>
     <div>
         <Navbar/>
-        <h1>Subreddit list</h1>
+        <div class="header">
+            <h1>Subreddit list</h1>
+        </div>
         <div class="subreddits">
             <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
         </div>
@@ -52,5 +54,9 @@ export default {
 <style>
 .subreddits {
     margin-top: 50px;
+}
+
+.header {
+    margin-top: 100px;
 }
 </style>
