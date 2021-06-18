@@ -57,10 +57,4 @@ router.post('/', async (req,res) => {
 })
 */
 
-<<<<<<< HEAD
-
 module.exports = router;
-
-=======
-module.exports = router;
->>>>>>> test
