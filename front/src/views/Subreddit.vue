@@ -1,7 +1,9 @@
 <template>
     <div>
         <Navbar/>
-        <h1>r/{{ name }}</h1>
+        <div class="header">
+            <h1>r/{{ name }}</h1>
+        </div>
         <div class="posts">
             <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
         </div>
@@ -53,7 +55,11 @@ export default {
 </script>
 
 <style>
-.subreddits {
-    margin-top: 50px;
+h1 {
+    margin-top: 100px;
+}
+
+.header {
+    margin-top: 100px;
 }
 </style>
