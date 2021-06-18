@@ -100,7 +100,6 @@ passport.deserializeUser((id, done) => {
     //});           
 });
 */
-
 passport.serializeUser((user, done) => {
     console.log(`serializeUser ${user.id}`);
     console.log("Reddit_User : " + JSON.stringify(user))
@@ -169,7 +168,7 @@ io.sockets.on("connect", (socket) => {
             await pg.query(`UPDATE post SET content = '${data.content}',checked = '${data.checked}' WHERE id = ${data.id};`);
         }
         const posts = await pg.query("SELECT * FROM post;");
-        io.sockets.emit('getData',posts);
+        io.sockets.emit('getData', posts);
     });
 
     socket.on("deletePost", async (id) => {
@@ -178,7 +177,7 @@ io.sockets.on("connect", (socket) => {
             await pg.query(`DELETE FROM post WHERE id = ${id};`);
         }
         const posts = await pg.query("SELECT * FROM post;");
-        io.sockets.emit('getData',posts);
+        io.sockets.emit('getData', posts);
     });
 
     socket.on("getSubreddits", async () => {
