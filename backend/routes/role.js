@@ -5,21 +5,22 @@ const client = require('../exports/postgres');
 
 
 router.get('/', async (req, res) => {
-    const role = await client.query("select * from role");
-    return res.send(role.rows)
-})
+    const role = await client.query("select * from role;");
+    return res.send(role.rows);
+});
 
 
 router.get('/id=:id',async (req, res) => {
-    const role = await client.query("select * from role where id = $1", [
-        req.params.id,
-    ])
+    const role = await client.query(
+        "select * from role where id = $1;",
+        [req.params.id,]
+    );
 
     if(role.rows[0])
-        return res.send(role.rows[0])
+        return res.send(role.rows[0]);
 
-    return res.status(404).send("Role not found")
-})
+    return res.status(404).send("Role not found.");
+});
 
 /*
 router.get("/nickname=:nickname",async (req, res) => {
@@ -56,6 +57,10 @@ router.post('/', async (req,res) => {
 })
 */
 
+<<<<<<< HEAD
 
 module.exports = router;
 
+=======
+module.exports = router;
+>>>>>>> test

@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register'
 import EditUser from '../views/EditUser'
 import Subreddits from '../views/Subreddits.vue'
+import Subreddit from '../views/Subreddit.vue'
 
 const routes = [
     {
@@ -42,6 +43,11 @@ const routes = [
         path: '/subreddits',
         name: 'Subreddits',
         component: Subreddits,
+    },
+    {
+        path: '/r/:name',
+        name: 'Subreddit',
+        component: Subreddit,
     },
 ];
 

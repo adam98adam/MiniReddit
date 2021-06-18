@@ -1,25 +1,26 @@
 <template>
     <div>
         <Navbar/>
-        <h1>Subreddit list</h1>
-        <div class="subreddits">
-            <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
+        <h1>r/{{ name }}</h1>
+        <div class="posts">
+            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
         </div>
     </div>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue'
-import SubredditRouter from '../components/SubredditRouter'
+import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
 
 export default {
-    name: 'Subreddits',
+    name: 'Subreddit',
     data() {
         {
             return {
-                subreddits:[],
+                name:this.$route.params.name,
+                posts:[],
                 port:3000,
                 editable:false,
             }
@@ -27,11 +28,12 @@ export default {
     },
     components: {
         Navbar,
-        SubredditRouter,
+        PostRouter,
     },
     methods: {
         async getAll() {
-            socket.emit('getSubreddits');
+            // console.log(this.$route.params.name);
+            socket.emit('getSubredditData', this.$route.params.name);
         },
         isLogged() {
             return localStorage.getItem("isLogged");
@@ -40,10 +42,11 @@ export default {
     computed: {},
     async created() { 
         console.log(await axios.get("http://localhost:3000/user/"));
+        console.log(this.$route.params.name);
         this.getAll();
-        socket.on('getSubreddits', async (subreddits) => {
-            console.log(subreddits.rows);
-            this.subreddits = subreddits.rows;
+        socket.on('getSubredditData', async (posts) => {
+            console.log(posts.rows);
+            this.posts = posts.rows;
         });
     }
 }

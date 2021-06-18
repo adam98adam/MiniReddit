@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 //const passportSocketIo = require("passport.socketio");
+
 const authRouter = require("./routes/auth");
 const redditUserRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
@@ -19,17 +20,13 @@ const surveyRouter = require("./routes/survey");
 const surveyAnswerRouter = require("./routes/survey_answer");
 const surveyUserAnswerRouter = require("./routes/survey_user_answer");
 
-
 const pg = require("./exports/postgres");
 const socket = require("socket.io");
 //const fetch = require("node-fetch");
 
 const sessionMiddleware = session({ secret: "changeit", resave: false, saveUninitialized: false });
 const app = express();
-app.use(cors({
-    origin: "http://localhost:8080",
-    credentials: true,
-}));
+app.use(cors({origin: "http://localhost:8080", credentials: true}));
 app.use(sessionMiddleware);
 app.use(express.json());
 //app.use(express.static('../public'))
@@ -57,13 +54,13 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 const LocalStrategy = require("passport-local").Strategy;
-const { use } = require("./routes/auth");
+// const { use } = require("./routes/auth");
 const client = require("./exports/postgres");
 
 const REDDIT_USER = {
     id: 0,
     nickname: "",
-}
+};
 
 passport.initialize();
 passport.use(
@@ -72,7 +69,7 @@ passport.use(
         //console.log(password)
         const reddit_user = await client.query(`select * from reddit_user where nickname = '${username}' and password = '${password}'`)
         //console.log(reddit_user.rows)
-        if(reddit_user.rows[0]) {
+        if (reddit_user.rows[0]) {
             console.log("authentication OK");
             REDDIT_USER.id = reddit_user.rows[0].id
             REDDIT_USER.nickname = reddit_user.rows[0].nickname
@@ -87,11 +84,11 @@ passport.use(
 
 passport.deserializeUser(async (id, done) => {
     console.log(`deserializeUser ${id}`);
-    console.log("Reddit_User : " + JSON.stringify(REDDIT_USER))
-    const reddit_user = await client.query(`select * from reddit_user where id = ${id}`)
+    console.log("Reddit_User : " + JSON.stringify(REDDIT_USER));
+    const reddit_user = await client.query(`select * from reddit_user where id = ${id};`);
     if(reddit_user.rows[0])
         REDDIT_USER.id = id;
-        REDDIT_USER.nickname = reddit_user.rows[0].nickname;
+    REDDIT_USER.nickname = reddit_user.rows[0].nickname;
     done(null, REDDIT_USER);
 });
 
@@ -124,18 +121,19 @@ app.use("/survey", surveyRouter);
 app.use("/survey_answer", surveyAnswerRouter);
 app.use("/survey_user_answer", surveyUserAnswerRouter);
 
-
-
 const server = app.listen(3000, () => {
     console.log(`listening at port 3000`);
 });
 
-const io = socket(server,{
-    cors: {
-        origin: "http://localhost:8080",
-        methods: ["GET","POST","PUT","DELETE"]
+const io = socket(
+    server,
+    {
+        cors: {
+            origin: "http://localhost:8080",
+            methods: ["GET","POST","PUT","DELETE"]
+        }
     }
-});
+);
 
 app.set('socketio',io);
 
@@ -148,43 +146,63 @@ io.use(wrap(passport.session()));
 io.sockets.on("connect", (socket) => {
     console.log("Socket.io: connected",socket.id);
     //console.log("Polaczono")
-    socket.on("disconnect",() => {
+
+    socket.on("disconnect", () => {
         console.log("Socket:io: disconnected");
     });
-    socket.on("getData",async () => {
-        const posts = await pg.query("SELECT * FROM post");
+
+    socket.on("getData", async () => {
+        const posts = await pg.query("SELECT * FROM post;");
         io.sockets.emit('getData', posts);
     });
-    socket.on("addPost",async (data) => {
-        await pg.query(`INSERT INTO post(content) VALUES ('${data.content}')`);
-        const posts = await pg.query("SELECT * FROM post");
+
+    socket.on("addPost", async (data) => {
+        await pg.query(`INSERT INTO post(content) VALUES ('${data.content}');`);
+        const posts = await pg.query("SELECT * FROM post;");
         io.sockets.emit('getData', posts);
     });
-    socket.on("editPost",async (data) => {
-        const post = await pg.query(`SELECT * FROM post WHERE id = ${data.id}`)
+
+    socket.on("editPost", async (data) => {
+        const post = await pg.query(`SELECT * FROM post WHERE id = ${data.id};`);
         if (post) {
-            await pg.query(`UPDATE post SET content = '${data.content}',checked = '${data.checked}' WHERE id = ${data.id}`)
+            await pg.query(`UPDATE post SET content = '${data.content}',checked = '${data.checked}' WHERE id = ${data.id};`);
         }
-        const posts = await pg.query("SELECT * FROM post");
-        io.sockets.emit('getData',posts);
+        const posts = await pg.query("SELECT * FROM post;");
+        io.sockets.emit('getData', posts);
     });
+
     socket.on("deletePost", async (id) => {
-        const post = await pg.query(`SELECT * FROM post WHERE  id = ${id}`)
+        const post = await pg.query(`SELECT * FROM post WHERE  id = ${id};`);
         if (post) {
-            await pg.query(`DELETE FROM post WHERE id = ${id}`);
+            await pg.query(`DELETE FROM post WHERE id = ${id};`);
         }
-        const posts = await pg.query("SELECT * FROM post");
-        io.sockets.emit('getData',posts);
+        const posts = await pg.query("SELECT * FROM post;");
+        io.sockets.emit('getData', posts);
     });
 
-
-
-    socket.on("getSubreddits",async () => {
-        const subreddits = await pg.query("SELECT * FROM subreddit");
+    socket.on("getSubreddits", async () => {
+        const subreddits = await pg.query("SELECT * FROM subreddit;");
         io.sockets.emit('getSubreddits', subreddits);
     });
 
+    socket.on("getSubredditData", async (name) => {
+        // console.log(name);
+        const subreddit = await pg.query(
+            "SELECT * FROM subreddit WHERE name=$1;",
+            [name]
+        );
+        // console.log(subreddit.rows[0].id);
+        const posts = await pg.query(
+            "SELECT * FROM post WHERE subreddit_id=$1;",
+            [subreddit.rows[0].id]
+        );
+        io.sockets.emit('getSubredditData', posts);
+    });
 
+    // socket.on("getSubreddits", async () => {
+    //     const subreddits = await pg.query("SELECT * FROM subreddit");
+    //     io.sockets.emit('getSubreddits', subreddits);
+    // });
 
     /*
     console.log(socket)
@@ -196,4 +214,4 @@ io.sockets.on("connect", (socket) => {
     console.log(session)
     session.save();
     */
-})
+});

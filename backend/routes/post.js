@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     if(post.rows)
         return res.send(post.rows);
 
-    return res.status(404).send("No post found");
+    return res.status(404).send("No post found.");
 });
 
 router.get('/id=:id', async (req, res) => {
