@@ -5,6 +5,7 @@ import ListPost from '../views/ListPost.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register'
 import EditUser from '../views/EditUser'
+import Subreddits from '../views/Subreddits'
 
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
         name: 'EditUser',
         component: EditUser
 
+    },
+    {
+        path: '/subreddits',
+        name: 'Subreddits',
+        component: Subreddits
     },
     {
         path: '/new',

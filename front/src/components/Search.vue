@@ -15,7 +15,6 @@
 <script>
     export default {
         name: 'Search',
-        props:[],
         data() {
             {
                 return {

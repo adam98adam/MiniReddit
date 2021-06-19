@@ -4,6 +4,7 @@
         <ul class="nav-list">
             <li @click="miniReddit()" class="nav-item"><a class="color">Mini Reddit</a></li>
             <li v-if="showItem()" class="nav-item" id="nickname"><a class="color">Welcome : {{ showNickname()}} </a></li>
+            <li @click="allSubreddits()" class="nav-item"><a class="color">Subreddits</a></li>
             <li v-if="showItem()"  @click="editUser()" class="nav-item"><a class="color">Edit User</a></li>
             <li v-if="!showItem()" @click="register()" class="nav-item"><a class="color"> Register</a></li>
             <li v-if="!showItem()" @click="login()" class="nav-item"><a class="color">Login</a></li>
@@ -30,6 +31,9 @@ export default {
   methods: {
       miniReddit(){
           this.$router.go(0);
+      },
+      allSubreddits() {
+          this.$router.push("/subreddits");
       },
       editUser() {
           this.$router.push("/editUser");

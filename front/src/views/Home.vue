@@ -2,6 +2,7 @@
     <div>
         <Navbar/>
         <Search @searchPosts="searchPosts"/>
+        <Sort @sortPosts="sortPosts"/>
         <div class="posts">
           <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
       </div>
@@ -11,10 +12,10 @@
 <script>
 import Navbar from '../components/Navbar.vue'
 import Search from '../components/Search.vue'
+import Sort from '../components/Sort.vue'
 import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
-
 
 
 
@@ -32,6 +33,7 @@ export default {
   components: {
     Navbar,
     Search,
+    Sort,
     PostRouter,
   },
   methods: {
@@ -40,6 +42,19 @@ export default {
     },
     isLogged() {
       return localStorage.getItem("isLogged");
+    },
+    sortPosts(sort){
+      console.log("Sort");
+      if(sort) {
+        this.posts = this.posts.sort((a, b) =>
+          a.creation_date > b.creation_date ? -1 : 1
+          );
+      } else {
+        this.posts = this.posts.sort((a, b) =>
+          a.creation_date > b.creation_date ? 1 : -1
+          );
+      }
+
     },
     async searchPosts(content){
       if(content.subreddit)
