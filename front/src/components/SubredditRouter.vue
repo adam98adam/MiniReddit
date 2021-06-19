@@ -1,6 +1,9 @@
 <template>
-    <div class="block">
-            <p>Id: {{ id }} Name: {{ name }} Description: {{ description }}</p> 
+    <div class="sub">
+        <div id="name">{{this.name}}</div>
+        <div id="hr"><hr></div>
+        <div id="description">{{this.description}}</div>
+        <button @click="goToSubreddit()" id="button" type="button" class="btn btn-dark">Click</button>
     </div>
 </template>
 
@@ -17,17 +20,55 @@ export default {
         getId() {
             return this.id;
         },
+        goToSubreddit() {
+            this.$router.push(`/r/${this.name}`);
+        },
     },
 }
 </script>
 
 <style>
-.block {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 300px;
-    margin-right: 300px;
-    border: 3px solid green;
-    background-color: greenyellow;
-}
+    .sub {
+        box-shadow: 2px 2px 2px red;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 50px;
+        margin-right: 50px;
+        border: 3px solid black;
+        background-color: greenyellow;
+        display:grid;
+        grid-template-columns: repeat(3,1fr);
+        grid-template-rows: repeat(4,1fr);
+        grid-template-areas: "name name name"
+                             "hr hr hr"
+                             "description description description"
+                             "ab button bc";
+    }
+
+
+
+    .sub > #name {
+        grid-area: name;
+        text-align: center;
+    }
+
+    .sub > #hr {
+        grid-area: hr;
+        text-align: center;
+    }
+
+    .sub > #description {
+        grid-area: description;
+        text-align: center;
+    }
+
+    .sub > #button {
+        grid-area: button;
+        text-align: center;
+    }
+
+    hr {
+        background-color: red;
+    }
+
 </style>

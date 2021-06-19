@@ -8,6 +8,7 @@
 import axios from '../services/axios'
 
 export default {
+  //NIE KORZYSTAM
   name: 'LogoutButton',
   data() {
     {

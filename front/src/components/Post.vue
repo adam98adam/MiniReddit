@@ -9,6 +9,7 @@
 </template>
 
 <script>
+//NIE KORZYSTAM
 export default {
     name: 'Post',
     props:['id','content','checked'],

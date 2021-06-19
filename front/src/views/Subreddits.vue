@@ -5,7 +5,10 @@
             <h1>Subreddit list</h1>
             <button v-if="isLogged()" @click="expand" class="btn createSubreddit">{{addSubredditText}}</button>
             <div v-if="showAddSubreddit">
-                <AddSubreddit/>
+                <AddSubreddit :subreddits="this.subreddits"/>
+            </div>
+            <div>
+                <button @click="getHome()" type="button" class="btn btn-secondary">Home</button>
             </div>
         </div>
         <div class="subreddits">
@@ -45,6 +48,9 @@ export default {
         },
         isLogged() {
             return localStorage.getItem("isLogged");
+        },
+        getHome() {
+            this.$router.push("/");
         },
         expand() {
             this.showAddSubreddit = !this.showAddSubreddit;

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+//DO Sprawdzenia
 import socket from '../socketConnection'
 
 export default {

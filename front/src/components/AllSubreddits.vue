@@ -1,18 +1,22 @@
 <template>
     <div class="sub">
-        <div id="name">r/{{this.name}}</div>
+        <div id="name">r/{{this.name}}adam</div>
         <div id="hr"><hr></div>
         <div id="description">{{this.description}}</div>
-        <button id="button"  type="button" class="btn btn-dark">Click</button>
+        <button @click="goToSubreddit()" id="button"  type="button" class="btn btn-dark">Click</button>
     </div>
 </template>
 
 <script>
+//NIE KORZYSTAM !!!!!!!
 export default {
     name: 'AllSubreddits',
     props:['id','name','description'],
     methods: {
-        async created() {}
+        goToSubreddit() {
+            console.log('hello')
+            //this.$router.push(`/r/${this.name}`);
+        },
     }
 }
 </script>

@@ -186,16 +186,19 @@ io.sockets.on("connect", (socket) => {
     });
 
     socket.on("getSubredditData", async (name) => {
-        // console.log(name);
-        const subreddit = await pg.query(
-            "SELECT * FROM subreddit WHERE name=$1;",
-            [name]
-        );
-        // console.log(subreddit.rows[0].id);
+         //console.log(name);
+        //console.log('hello1234')
         const posts = await pg.query(
-            "SELECT * FROM post WHERE subreddit_id=$1;",
-            [subreddit.rows[0].id]
+            "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id where s.name = '" + name + "';"
         );
+        //console.log(posts)
+
+        //"SELECT * FROM subreddit WHERE name=$1;",
+        // console.log(subreddit.rows[0].id);
+       // const posts = await pg.query(
+         //   "SELECT * FROM post WHERE subreddit_id=$1;",
+           // [subreddit.rows[0].id]
+        //);
         io.sockets.emit('getSubredditData', posts);
     });
 

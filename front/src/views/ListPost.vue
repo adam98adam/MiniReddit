@@ -14,6 +14,7 @@
 </template>
 
 <script>
+//NIE KORZYSTAM
 import PostRouter from '../components/PostRouter'
 import LoginButton from '../components/LoginButton'
 import LogoutButton from '../components/LogoutButton'

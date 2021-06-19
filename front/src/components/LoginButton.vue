@@ -5,6 +5,7 @@
 </template>
 
 <script>
+//NIE KORZYSTAM
 export default {
   name: 'LoginButton',
   props: ['logged'],

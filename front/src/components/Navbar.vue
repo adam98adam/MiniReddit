@@ -79,7 +79,7 @@ ul.nav-list {
 
 li.nav-item#nickname {
     margin-right: auto;
-    margin-left: 4.5rem;
+    margin-left: 10.0rem;
 }
 
 a {

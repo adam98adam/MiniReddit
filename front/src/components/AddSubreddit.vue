@@ -10,6 +10,9 @@
                 <input type="text" v-model="subDescription" name="subDescription" placeholder="Add description" />
             </div>
             <input type="submit" value="Confirm" class="btn subButton" />
+            <div id="error-message" v-if="errorMessage.isVisible" >
+                {{ errorMessage.content }}
+            </div>
         </div>
     </form>
 </template>
@@ -19,23 +22,54 @@ import socket from '../socketConnection'
 
 export default {
     name: 'AddSubreddit',
+    props:['subreddits'],
     data() {
         return {
             subName: '',
             subDescription: '',
+            errorMessage: {
+                isVisible: false,
+                content:""
+            }
         }
     },
     methods: {
+        showErrorMessage(message) {
+            this.errorMessage.content = message;
+            this.errorMessage.isVisible = true;
+            setTimeout(() => {
+                this.errorMessage.isVisible = false;
+            }, 6000);
+        },
         onSubmit(e) {
             e.preventDefault()
             if (!this.subName) {
-                alert('Please add subreddit name')
+                this.showErrorMessage('Please add subreddit name')
+                //alert('Please add subreddit name')
                 return
             }
             if (!this.subDescription) {
-                alert('Please add subreddit description')
+                this.showErrorMessage('Please add subreddit description')
+                //alert('Please add subreddit description')
                 return
             }
+
+            let isRepeated = false
+            this.subreddits.forEach(el => {
+                if(el.name === this.subName) {
+                    isRepeated = true;
+                }
+
+            });
+
+            if(isRepeated === true) {
+                this.showErrorMessage('Subreddit already exists')
+                //alert('Subreddit already exists')
+                return
+            }
+
+
+
             const newSubreddit = {
                 name: this.subName,
                 description: this.subDescription,
@@ -80,5 +114,11 @@ export default {
     margin-left: 1rem;
     margin-right: 1rem;
     background: greenyellow;
+}
+
+#error-message {
+	text-align: center;
+	color: red;
+	margin-top: 12px;
 }
 </style>

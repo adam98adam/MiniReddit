@@ -3,6 +3,7 @@
 </template>
 
 <script>
+//DO ZMIANY
 export default {
     name: 'HomeButton',
     data() {

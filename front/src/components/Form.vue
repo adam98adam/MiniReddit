@@ -7,6 +7,7 @@
 </template>
 
 <script>
+//NIE KORZYSTAM !!!!!
 export default {
     name: 'Form',
     data() {

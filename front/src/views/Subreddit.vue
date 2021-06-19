@@ -5,7 +5,7 @@
             <h1>r/{{ name }}</h1>
         </div>
         <div class="posts">
-            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
+            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
         </div>
     </div>
 </template>
@@ -23,8 +23,6 @@ export default {
             return {
                 name:this.$route.params.name,
                 posts:[],
-                port:3000,
-                editable:false,
             }
         }
     },
@@ -47,6 +45,7 @@ export default {
         console.log(this.$route.params.name);
         this.getAll();
         socket.on('getSubredditData', async (posts) => {
+            console.log('hello')
             console.log(posts.rows);
             this.posts = posts.rows;
         });
