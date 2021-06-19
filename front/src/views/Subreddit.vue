@@ -21,10 +21,10 @@ export default {
     data() {
         {
             return {
-                name:this.$route.params.name,
-                posts:[],
-                port:3000,
-                editable:false,
+                name: this.$route.params.name,
+                posts: [],
+                port: 3000,
+                editable: false,
             }
         }
     },
@@ -55,11 +55,14 @@ export default {
 </script>
 
 <style>
-h1 {
-    margin-top: 100px;
+.header {
+    margin-top: 6rem;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.header {
-    margin-top: 100px;
+.posts {
+    margin-top: 4rem;
 }
 </style>

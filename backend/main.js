@@ -199,10 +199,27 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('getSubredditData', posts);
     });
 
-    // socket.on("getSubreddits", async () => {
-    //     const subreddits = await pg.query("SELECT * FROM subreddit");
-    //     io.sockets.emit('getSubreddits', subreddits);
-    // });
+    socket.on("addSubreddit", async (newSubreddit) => {
+        const newId = await pg.query(
+            "INSERT INTO subreddit(name, description) VALUES($1, $2) RETURNING ID;",
+            [newSubreddit.name, newSubreddit.description]
+        );
+        const userId = await pg.query(
+            "SELECT id FROM reddit_user WHERE nickname=$1;",
+            [newSubreddit.nickname]
+        );
+        await pg.query(
+            "INSERT INTO subreddit_moderator (user_id, subreddit_id) VALUES($1, $2);",
+            [userId.rows[0].id, newId.rows[0].id]
+        );
+        await pg.query(
+            "INSERT INTO subreddit_user (user_id, subreddit_id) VALUES($1, $2);",
+            [userId.rows[0].id, newId.rows[0].id]
+        );
+
+        const subreddits = await pg.query("SELECT * FROM subreddit;");
+        io.sockets.emit('getSubreddits', subreddits);
+    });
 
     /*
     console.log(socket)

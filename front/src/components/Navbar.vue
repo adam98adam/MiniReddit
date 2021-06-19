@@ -1,5 +1,4 @@
 <template>
-
      <nav>
         <ul class="nav-list">
             <li @click="miniReddit()" class="nav-item"><a class="color">Mini Reddit</a></li>
@@ -10,56 +9,46 @@
             <li v-if="showItem()" @click="logout()" class="nav-item"><a class="color">Logout</a></li>
         </ul>
     </nav>
-
-    
 </template>
 
 <script>
-
-
-
 export default {
-  name: 'Navbar',
-  data() {
-    {
-      return {
-     
-      }
-    } 
-  },
-  methods: {
-      miniReddit(){
-          this.$router.go(0);
-      },
-      editUser() {
-          this.$router.push("/editUser");
-      },
-      register() {
-          this.$router.push("/register");
-      },
-      login() {
-          this.$router.push("/login");
-      },
-      logout() {
-           localStorage.removeItem("nickname");
-           localStorage.removeItem("isLogged");
-           this.$router.go(0);
-      },
-      showItem() {
-          return localStorage.getItem("isLogged");
-      },
-      showNickname() {
-          if(localStorage.getItem("nickname") !== null)
-            return localStorage.getItem("nickname")
-      }
-
-  },
+    name: 'Navbar',
+    data() {
+        {
+            return {}
+        } 
+    },
+    methods: {
+        miniReddit(){
+            this.$router.go(0);
+        },
+        editUser() {
+            this.$router.push("/editUser");
+        },
+        register() {
+            this.$router.push("/register");
+        },
+        login() {
+            this.$router.push("/login");
+        },
+        logout() {
+            localStorage.removeItem("nickname");
+            localStorage.removeItem("isLogged");
+            this.$router.go(0);
+        },
+        showItem() {
+            return localStorage.getItem("isLogged");
+        },
+        showNickname() {
+            if (localStorage.getItem("nickname") !== null)
+                return localStorage.getItem("nickname");
+        },
+    },
 }
-      
 </script>
 
 <style scoped lang="scss">
-
 ul.nav-list {
 	background-color: rgba(27, 25, 25, 1);
 	box-shadow: 2px 2px 2px 1px rgb(243, 10, 2);
@@ -72,33 +61,28 @@ ul.nav-list {
 	justify-content: flex-end;
 	align-items: center;
 }
- li.nav-item {
-	list-style: none;
-	margin-right: 2rem;
-	&:first-child {
-		margin-right: auto;
-		margin-left: 2rem;
-	}
-   
-    
+
+li.nav-item {
+    list-style: none;
+    margin-right: 2rem;
+    &:first-child {
+        margin-right: auto;
+        margin-left: 2rem;
+    }
 }
 
-li.nav-item#nickname{
+li.nav-item#nickname {
     margin-right: auto;
     margin-left: 4.5rem;
 }
 
-a{
+a {
     text-decoration: none;
     color: red;
 }
 
 a:hover {
-  color:whitesmoke;
-  text-decoration: none;
+    color:whitesmoke;
+    text-decoration: none;
 }
-
-
-
 </style>
-
