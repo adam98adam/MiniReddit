@@ -3,19 +3,17 @@
 </template>
 
 <script>
-    export default {
-        name: 'HomeButton',
-        data() {
-            {
-                return {
-
-                }
-            }
-        },
-        methods: {
-            backToHome() {
-                this.$router.push("/");
-            }
+export default {
+    name: 'HomeButton',
+    data() {
+        {
+            return {}
+        }
+    },
+    methods: {
+        backToHome() {
+            this.$router.push("/");
         }
     }
+}
 </script>

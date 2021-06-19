@@ -1,11 +1,10 @@
 <template>
-    <div>
-        <button  v-if="!this.logged" @click="$router.push('/login')">Log in</button>
-    </div>
+  <div>
+    <button  v-if="!this.logged" @click="$router.push('/login')">Log in</button>
+  </div>
 </template>
 
 <script>
-
 export default {
   name: 'LoginButton',
   props: ['logged'],
@@ -22,11 +21,4 @@ export default {
     }
   },
 }
-      
-
-
-
 </script>
-
-
-

@@ -19,9 +19,6 @@ import LoginButton from '../components/LoginButton'
 import LogoutButton from '../components/LogoutButton'
 import socket from '../socketConnection'
 
-
-
-
 export default {
   name: 'ListPost',
   data() {
@@ -81,7 +78,5 @@ export default {
             console.log(this.posts)
         })
     },
-    
 }
-
 </script>

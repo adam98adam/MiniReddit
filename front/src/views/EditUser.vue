@@ -31,8 +31,6 @@
 import HomeButton from '../components/HomeButton.vue'
 import axios from '../services/axios'
 
-
-
 export default {
   name: 'EditUser',
   data() {
@@ -42,41 +40,39 @@ export default {
         newPassword:"",
         confirmPassword:"",
         errorMessage: {
-            isVisible: false,
-            content:""
+          isVisible: false,
+          content:""
         }
-    
       }
-    
     } 
   },
   components: {
     HomeButton
   },
   methods: {
-      showErrorMessage(message) {
-        this.errorMessage.content = message;
-        this.errorMessage.isVisible = true;
-        setTimeout(() => {
-            this.errorMessage.isVisible = false;
-        }, 6000);
-      },
-      async changePassword() {
-          await axios.put("/user", {
-              OldPassword: this.oldPassword,
-              NewPassword: this.newPassword,
-              ConfirmPassword:this.confirmPassword
-          }).then((res) => {
-              console.log(res);
-              this.$router.push("/");
-              //document.cookie = "isLogged=true"
-              //sessionStorage.setItem("isLogged", "true")
-              //localStorage.setItem("isLogged", "true")   
-          }).catch((error) => {
-              console.log(error)
-              this.showErrorMessage(error.response.data)
-          })
-      }
+    showErrorMessage(message) {
+      this.errorMessage.content = message;
+      this.errorMessage.isVisible = true;
+      setTimeout(() => {
+          this.errorMessage.isVisible = false;
+      }, 6000);
+    },
+    async changePassword() {
+      await axios.put("/user", {
+          OldPassword: this.oldPassword,
+          NewPassword: this.newPassword,
+          ConfirmPassword:this.confirmPassword
+      }).then((res) => {
+          console.log(res);
+          this.$router.push("/");
+          //document.cookie = "isLogged=true"
+          //sessionStorage.setItem("isLogged", "true")
+          //localStorage.setItem("isLogged", "true")   
+      }).catch((error) => {
+          console.log(error)
+          this.showErrorMessage(error.response.data)
+      })
+    }
     //async getAll() {
     //    socket.emit('getData')
    // },
@@ -84,9 +80,7 @@ export default {
    //     socket.disconnect();
     //}
   },
-  computed: {
-
-  },
+  computed: {},
   /*
   created(){ 
         this.getAll();
@@ -99,9 +93,7 @@ export default {
             })
         }
 }
-    */  
-
-
+    */
 }
 </script>
 
@@ -140,5 +132,4 @@ h2 {
 	color: red;
 	margin-top: 12px;
 }
-
 </style>

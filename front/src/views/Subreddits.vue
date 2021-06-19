@@ -3,6 +3,10 @@
         <Navbar/>
         <div class="header">
             <h1>Subreddit list</h1>
+            <button v-if="isLogged()" @click="expand" class="btn createSubreddit">{{addSubredditText}}</button>
+            <div v-if="showAddSubreddit">
+                <AddSubreddit/>
+            </div>
         </div>
         <div class="subreddits">
             <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
@@ -13,6 +17,7 @@
 <script>
 import Navbar from '../components/Navbar.vue'
 import SubredditRouter from '../components/SubredditRouter'
+import AddSubreddit from '../components/AddSubreddit'
 import socket from '../socketConnection'
 import axios from '../services/axios'
 
@@ -24,12 +29,15 @@ export default {
                 subreddits:[],
                 port:3000,
                 editable:false,
+                showAddSubreddit: false,
+                addSubredditText: "Create Subreddit",
             }
         }
     },
     components: {
         Navbar,
         SubredditRouter,
+        AddSubreddit,
     },
     methods: {
         async getAll() {
@@ -37,6 +45,15 @@ export default {
         },
         isLogged() {
             return localStorage.getItem("isLogged");
+        },
+        expand() {
+            this.showAddSubreddit = !this.showAddSubreddit;
+            if (this.showAddSubreddit) {
+                this.addSubredditText = "Cancel";
+            }
+            else {
+                this.addSubredditText = "Create Subreddit";
+            }
         },
     },
     computed: {},
@@ -57,6 +74,19 @@ export default {
 }
 
 .header {
-    margin-top: 100px;
+    margin-top: 6rem;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.addPost {
+    margin: 1rem;
+}
+
+.createSubreddit {
+    margin-top: 2rem;
+    background: cadetblue !important;
+    border: 3px black solid !important;
 }
 </style>

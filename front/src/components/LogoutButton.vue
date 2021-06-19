@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <button v-if="isLogged()" @click="logout()" >Log out</button> 
-    </div>
+  <div>
+    <button v-if="isLogged()" @click="logout()" >Log out</button> 
+  </div>
 </template>
 
 <script>
@@ -29,6 +29,4 @@ export default {
     }
   },
 }
-      
 </script>
-

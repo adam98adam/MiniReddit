@@ -30,6 +30,11 @@ const routes = [
         component: EditUser,
     },
     {
+        path: '/subreddits',
+        name: 'Subreddits',
+        component: Subreddits
+    },
+    {
         path: '/new',
         name: 'AddPost',
         component: AddPost,

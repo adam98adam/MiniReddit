@@ -1,36 +1,33 @@
 <template>
     <div class="container">
-					<form>
-						<div class="form-group">
-							<h2>Login</h2>
-						</div>
-						<div class="form-group">
-							<label  for="nickname">Nickname</label><br>
-							<input  v-model="nickname" id="nickname" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label  for="password">Password</label><br>
-							<input v-model="password" id="password" type="password" class="form-control">
-						</div>
-                        <div class="form-group">
-                           <button @click="login()" id="signupSubmit" class="btn btn-info">Log in</button>
-                        </div>
-                        <HomeButton/>
-                        <div id="error-message" v-if="errorMessage.isVisible" >
-                            {{ errorMessage.content }}
-                        </div> 
-						<hr>
-						<p>Don't have an account? <button @click="$router.push('/register')" id="button" type="button"  class="btn btn-danger">Register</button></p>
-					</form>
-		
+        <form>
+            <div class="form-group">
+                <h2>Login</h2>
+            </div>
+            <div class="form-group">
+                <label  for="nickname">Nickname</label><br>
+                <input  v-model="nickname" id="nickname" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label  for="password">Password</label><br>
+                <input v-model="password" id="password" type="password" class="form-control">
+            </div>
+            <div class="form-group">
+            <button @click="login()" id="signupSubmit" class="btn btn-info">Log in</button>
+            </div>
+            <HomeButton/>
+            <div id="error-message" v-if="errorMessage.isVisible" >
+                {{ errorMessage.content }}
+            </div> 
+            <hr>
+            <p>Don't have an account? <button @click="$router.push('/register')" id="button" type="button"  class="btn btn-danger">Register</button></p>
+        </form>
 	</div>
 </template>
 
 <script>
 import HomeButton from '../components/HomeButton.vue'
 import axios from '../services/axios'
-
-
 
 export default {
   name: 'Login',
@@ -97,9 +94,7 @@ export default {
             })
         }
 }
-    */  
-
-
+    */
 }
 </script>
 
@@ -138,5 +133,4 @@ h2 {
 	color: red;
 	margin-top: 12px;
 }
-
 </style>

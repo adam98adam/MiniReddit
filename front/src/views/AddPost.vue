@@ -9,7 +9,6 @@
 <script>
 import socket from '../socketConnection'
 
-
 export default {
   name: 'AddPost',
   data() {
@@ -18,24 +17,18 @@ export default {
         post:"",
         port:3000,
       }
-    
     } 
   },
-  components: {
-
-  },
+  components: {},
   methods: {
     async addPost() {
         await socket.emit('addPost',{content: this.post})
         this.$router.push('/list') 
     }
   },
-  created: async function() {
-  
-  }
+  created: async function() {}
 }
 </script>
 
 <style>
-
 </style>

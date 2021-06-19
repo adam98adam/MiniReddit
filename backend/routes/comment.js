@@ -49,7 +49,6 @@ router.get('/post_id=:post_id', async (req, res) => {
     return res.status(404).send("No comment found.");
 });
 
-
 router.post("/new", async (req, res) => {
     const commentId = await client.query(
         `insert into comment(content, parent_comment_id, user_id, post_id) values($1, $2, $3, $4) RETURNING ID;`,
