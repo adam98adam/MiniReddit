@@ -1,15 +1,16 @@
 <template>
     <div class="grid-container">
              <div id="up-arrow">
-                 <a><i class="fas fa-arrow-up"></i></a>
+                 <a @click="giveLike()"><i class="fas fa-arrow-up"></i></a>
              </div>
              <div id="subreddit">r/{{this.subreddit_name}}</div>
              <div id="nickname">Posted by u/{{this.user_nickname}}</div>
              <div id="created">{{this.time}}</div>
              <div id="counter">{{this.counter}}</div>
+             <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
              <div id="content">{{this.content}}</div>
              <div id="bottom-arrow">
-                 <a><i class="fas fa-arrow-down"></i></a>
+                 <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
             </div>
     </div>
 </template>
@@ -18,6 +19,7 @@
 <script>
 //import axios from '../services/axios'
 import moment from 'moment'
+import axios from 'axios';
     export default {
         name: 'PostRouter',
         props:['id','title','content','image_path','video_url','creation_date','subreddit_name','user_nickname','post_votes'],
@@ -27,14 +29,39 @@ import moment from 'moment'
                     //subreddit_name:'',
                     //nickname:'',
                     time:'',
-                    counter:0
+                    counter:0,
+                    errorMessage: {
+                        isVisible: false,
+                        content:""
+                    }
                 }
             }
         },
         methods: {
-            getId() {
-                return this.id
+            showErrorMessage(message) {
+                this.errorMessage.content = message;
+                this.errorMessage.isVisible = true;
+                setTimeout(() => {
+                    this.errorMessage.isVisible = false;
+                }, 6000);
             },
+            async giveLike() {
+                if(localStorage.getItem("isLogged")) {
+                    console.log("giveLike")
+                    await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=1`)
+                } else {
+                    this.showErrorMessage("Log in to vote");
+                }
+            },
+            async giveDislike() {
+                if(localStorage.getItem("isLogged")) {
+                    console.log("giveDislake")
+                    await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=-1`)
+                } else {
+                    this.showErrorMessage("Log in to vote");
+                }
+
+            }
         },
         async created() {
            // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
@@ -65,9 +92,10 @@ border: 3px solid black;
 background-color: greenyellow;
 display:grid;
 grid-template-columns: repeat(4,1fr);
-grid-template-rows: repeat(3,1fr);
+grid-template-rows: repeat(4,1fr);
 grid-template-areas: "up-arrow subreddit nickname creation-date"
                      "counter content content content"
+                     "error content content content"
                      "bottom-arrow content content content";
 }
 
@@ -108,6 +136,15 @@ grid-template-areas: "up-arrow subreddit nickname creation-date"
 
 }
 
+.grid-container > #error {
+    grid-area: error;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:red;
+
+}
+
 .grid-container > #content {
     grid-area: content;
     display:flex;
@@ -123,6 +160,7 @@ grid-template-areas: "up-arrow subreddit nickname creation-date"
 .grid-container > #bottom-arrow > a:hover {
    color:blue;
 }
+
 
 
 

@@ -3,6 +3,8 @@ var router = express.Router();
 const client = require('../exports/postgres');
 
 router.get('/', async (req, res) => {
+    console.log(req.user)
+    console.log('hello')
     const post = await client.query(
         "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id"
     );
