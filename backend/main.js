@@ -199,7 +199,8 @@ io.sockets.on("connect", (socket) => {
          //   "SELECT * FROM post WHERE subreddit_id=$1;",
            // [subreddit.rows[0].id]
         //);
-        io.sockets.emit('getSubredditData', posts);
+        //io.sockets.emit('getSubredditData', posts);
+        io.to(socket.id).emit('getSubredditData', posts);
     });
 
     socket.on("addSubreddit", async (newSubreddit) => {
