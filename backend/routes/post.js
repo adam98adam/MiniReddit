@@ -3,14 +3,38 @@ var router = express.Router();
 const client = require('../exports/postgres');
 
 router.get('/', async (req, res) => {
+    console.log(req.user)
+    console.log('hello')
     const post = await client.query(
-        "select * from post;"
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id"
     );
 
     if(post.rows)
         return res.send(post.rows);
 
     return res.status(404).send("No post found.");
+});
+
+router.get('/subreddit=:subreddit', async (req, res) => {
+    const post = await client.query(
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id  where s.name LIKE '%" + req.params.subreddit  + "%';" 
+    ,);
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found");
+});
+
+router.get('/content=:content', async (req, res) => {
+    const post = await client.query(
+        "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id  where p.content LIKE '%" + req.params.content + "%';"
+    ,);
+
+    if(post.rows)
+        return res.send(post.rows);
+
+    return res.status(404).send("No post found");
 });
 
 router.get('/id=:id', async (req, res) => {
@@ -49,11 +73,7 @@ router.get('/subreddit_id=:subreddit_id', async (req, res) => {
     return res.status(404).send("No post found.");
 });
 
-
-
-
 //Do przejrzenia
-
 router.post("/new", async (req, res) => {
     const postId = await client.query(
         `insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
@@ -68,7 +88,6 @@ router.post("/new", async (req, res) => {
 });
 
 //Do przejrzenia
-
 router.put("/id=:id", async (req, res) => {
     await client.query(
         "update post set title=$2, content=$3, image_path=$4, video_url=$5, creation_date=$6, subreddit_id=$7, user_id=$8 where id=$1;",
@@ -82,7 +101,6 @@ router.put("/id=:id", async (req, res) => {
 
     return res.send(getPost.rows[0]);
 });
-
 
 //Klucz Obcy
 router.delete("/id=:id", async (req, res) => {

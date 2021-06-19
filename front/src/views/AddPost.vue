@@ -9,33 +9,26 @@
 <script>
 import socket from '../socketConnection'
 
-
 export default {
-  name: 'AddPost',
-  data() {
-    {
-      return {
-        post:"",
-        port:3000,
-      }
-    
-    } 
-  },
-  components: {
-
-  },
-  methods: {
-    async addPost() {
-        await socket.emit('addPost',{content: this.post})
-        this.$router.push('/list') 
-    }
-  },
-  created: async function() {
-  
-  }
+    name: 'AddPost',
+    data() {
+        {
+            return {
+                post: "",
+                port: 3000,
+            }
+        } 
+    },
+    components: {},
+    methods: {
+        async addPost() {
+            await socket.emit('addPost', {content: this.post});
+            this.$router.push('/list');
+        }
+    },
+    created: async function() {}
 }
 </script>
 
 <style>
-
 </style>

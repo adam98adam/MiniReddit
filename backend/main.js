@@ -221,6 +221,11 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('getSubreddits', subreddits);
     });
 
+    // socket.on("getSubreddits", async () => {
+    //     const subreddits = await pg.query("SELECT * FROM subreddit");
+    //     io.sockets.emit('getSubreddits', subreddits);
+    // });
+
     /*
     console.log(socket)
     const session = socket.request.session;

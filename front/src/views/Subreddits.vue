@@ -3,9 +3,6 @@
         <Navbar/>
         <div class="header">
             <h1>Subreddit list</h1>
-            <!-- <div v-if="isLogged()" @click="logout()" class="addPost">
-                <a class="color">Logout</a>
-            </div> -->
             <button v-if="isLogged()" @click="expand" class="btn createSubreddit">{{addSubredditText}}</button>
             <div v-if="showAddSubreddit">
                 <AddSubreddit/>

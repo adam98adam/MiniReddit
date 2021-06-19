@@ -5,28 +5,18 @@
 </template>
 
 <script>
-
 export default {
-  name: 'LoginButton',
-  props: ['logged'],
-  data() {
-    {
-      return {
-     
-      }
-    } 
-  },
-  methods: {
-    isLogged() {
-      return localStorage.getItem("isLogged");
-    }
-  },
+    name: 'LoginButton',
+    props: ['logged'],
+    data() {
+        {
+            return {}
+        } 
+    },
+    methods: {
+        isLogged() {
+            return localStorage.getItem("isLogged");
+        }
+    },
 }
-      
-
-
-
 </script>
-
-
-

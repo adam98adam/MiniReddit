@@ -5,7 +5,7 @@
             <h1>r/{{ name }}</h1>
         </div>
         <div class="posts">
-            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :content="post.content"/>
+            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
         </div>
     </div>
 </template>
@@ -35,7 +35,8 @@ export default {
     methods: {
         async getAll() {
             // console.log(this.$route.params.name);
-            socket.emit('getSubredditData', this.$route.params.name);
+            // socket.emit('getSubredditData', this.$route.params.name);
+            socket.emit('getData');
         },
         isLogged() {
             return localStorage.getItem("isLogged");
@@ -44,12 +45,15 @@ export default {
     computed: {},
     async created() { 
         console.log(await axios.get("http://localhost:3000/user/"));
-        console.log(this.$route.params.name);
-        this.getAll();
-        socket.on('getSubredditData', async (posts) => {
-            console.log(posts.rows);
-            this.posts = posts.rows;
-        });
+        const data = await axios.get("http://localhost:3000/post/subreddit="+this.$route.params.name);
+        //console.log(data.data)
+        this.posts = data.data;
+        // console.log(this.$route.params.name);
+        // this.getAll();
+        // socket.on('getSubredditData', async (posts) => {
+        //     console.log(posts.rows);
+        //     this.posts = posts.rows;
+        // });
     }
 }
 </script>

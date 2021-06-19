@@ -1,5 +1,5 @@
 <template>
-     <nav>
+    <nav>
         <ul class="nav-list">
             <li @click="miniReddit()" class="nav-item"><a class="color">Mini Reddit</a></li>
             <li v-if="showItem()" class="nav-item" id="nickname"><a class="color">Welcome : {{ showNickname()}} </a></li>
@@ -50,40 +50,25 @@ export default {
 
 <style scoped lang="scss">
 ul.nav-list {
-	background-color: rgba(27, 25, 25, 1);
-	box-shadow: 2px 2px 2px 1px rgb(243, 10, 2);
-	margin: 0px;
-	top: 0px;
-	width: 100%;
-	padding: 1rem 0;
-	position: fixed;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
+    background-color: rgba(27, 25, 25, 1);
+    box-shadow: 2px 2px 2px 1px rgb(243, 10, 2);
+    margin: 0px;
+    top: 0px;
+    width: 100%;
+    padding: 1rem 0;
+    position: fixed;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 li.nav-item {
-	list-style: none;
-	margin-right: 2rem;
-	&:first-child {
-		margin-right: auto;
-		margin-left: 2rem;
-	}
-}
-
-li.nav-item#nickname {
-    margin-right: auto;
-    margin-left: 4.5rem;
-}
-
-a {
-    text-decoration: none;
-    color: red;
-}
-
-a:hover {
-  color:whitesmoke;
-  text-decoration: none;
+    list-style: none;
+    margin-right: 2rem;
+    &:first-child {
+        margin-right: auto;
+        margin-left: 2rem;
+    }
 }
 
 li.nav-item#nickname {
