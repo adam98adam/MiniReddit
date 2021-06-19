@@ -63,12 +63,27 @@ ul.nav-list {
 }
 
 li.nav-item {
-    list-style: none;
-    margin-right: 2rem;
-    &:first-child {
-        margin-right: auto;
-        margin-left: 2rem;
-    }
+	list-style: none;
+	margin-right: 2rem;
+	&:first-child {
+		margin-right: auto;
+		margin-left: 2rem;
+	}
+}
+
+li.nav-item#nickname {
+    margin-right: auto;
+    margin-left: 4.5rem;
+}
+
+a {
+    text-decoration: none;
+    color: red;
+}
+
+a:hover {
+  color:whitesmoke;
+  text-decoration: none;
 }
 
 li.nav-item#nickname {
