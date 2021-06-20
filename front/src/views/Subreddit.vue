@@ -44,7 +44,7 @@ export default {
             socket.emit('getSubredditData', this.$route.params.name);
         },
         isLogged() {
-            return localStorage.getItem("isLogged");
+            return sessionStorage.getItem("isLogged");
         },
         expand() {
             this.showAddPost = !this.showAddPost;
