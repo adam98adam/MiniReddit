@@ -5,8 +5,11 @@
             <h1>r/{{ name }}</h1>
             <button v-if="isLogged()" @click="expand" class="btn createPost">{{addPostText}}</button>
             <div v-if="showAddPost">
-                <AddPost/>
+                <AddPost :name="this.name"/>
             </div>
+        </div>
+        <div id="error-message" v-if="errorMessage.isVisible" >
+            {{ errorMessage.content }}
         </div>
         <div class="posts">
             <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
@@ -30,6 +33,10 @@ export default {
                 posts:[],
                 showAddPost: false,
                 addPostText: "Create Post",
+                 errorMessage: {
+                    isVisible: false,
+                    content:""
+                }
             }
         }
     },
@@ -55,17 +62,25 @@ export default {
                 this.addPostText = "Create Post";
             }
         },
+        showErrorMessage(message) {
+            this.errorMessage.content = message;
+            this.errorMessage.isVisible = true;
+            setTimeout(() => {
+                this.errorMessage.isVisible = false;
+            }, 6000);
+        },
     },
-    computed: {},
     async created() { 
         console.log(await axios.get("http://localhost:3000/user/"));
         console.log(this.$route.params.name);
         this.getAll();
         socket.on('getSubredditData', async (posts) => {
-            // console.log('hello')
-            console.log(posts.rows);
-            this.posts = posts.rows;
-        });
+            if(posts === 0)
+                this.showErrorMessage('Post title already exists in this subreddit')
+            else {
+                this.posts = posts.rows
+            }
+        })
     }
 }
 </script>
@@ -83,5 +98,10 @@ h1 {
     margin-top: 2rem;
     background: cadetblue !important;
     border: 3px black solid !important;
+}
+#error-message {
+	text-align: center;
+	color: red;
+	margin-top: 12px;
 }
 </style>

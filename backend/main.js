@@ -157,9 +157,20 @@ io.sockets.on("connect", (socket) => {
     });
 
     socket.on("addPost", async (data) => {
-        await pg.query(`INSERT INTO post(content) VALUES ('${data.content}');`);
-        const posts = await pg.query("SELECT * FROM post;");
-        io.sockets.emit('getData', posts);
+        const time = await pg.query("SELECT date_trunc('second', now()::timestamp) as time;");
+        const user_id = await pg.query(`SELECT id from reddit_user where nickname = '${data.nickname}' `)
+        const subreddit_id =  await pg.query(`select id from subreddit where name = '${data.name}'`);
+        const checkTitle = await pg.query(` select * from post p inner join subreddit s on p.subreddit_id = s.id where s.name = '${data.name}' and p.title = '${data.title}';`)
+        if(!checkTitle.rows[0]) {
+            await pg.query(`insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
+            [data.title, data.content, data.image_path, data.video_url, time.rows[0].time, subreddit_id.rows[0].id, user_id.rows[0].id]);
+            const posts_subreddit = await  pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id where s.name = '${data.name}';`)
+            const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+            io.sockets.emit('getSubredditData', posts_subreddit);
+            io.sockets.emit('allPosts', all_posts);
+        } else {
+            io.to(socket.id).emit('getSubredditData', 0);
+        }
     });
 
     socket.on("editPost", async (data) => {

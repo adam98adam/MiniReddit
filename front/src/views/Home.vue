@@ -52,9 +52,10 @@ export default {
           a.creation_date > b.creation_date ? -1 : 1
           );
       } else {
-        this.posts = this.posts.sort((a, b) =>
-          a.creation_date > b.creation_date ? 1 : -1
-          );
+          this.posts = this.posts.reverse();
+        //this.posts = this.posts.sort((a, b) =>
+          //a.creation_date > b.creation_date ? 1 : -1
+          //);
       }
     },
     async searchPosts(content){
@@ -83,6 +84,11 @@ export default {
         //console.log(data.data)
         this.posts = data.data
         this.orginalPosts = data.data
+        socket.on('allPosts', async (posts) => {
+            // console.log('hello')
+            console.log(posts.rows);
+            this.posts = posts.rows;
+        });
         //console.log(posts)
         //this.posts = data.rows
         //console.log(this.posts)

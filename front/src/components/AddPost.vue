@@ -30,15 +30,13 @@ import socket from '../socketConnection'
 
 export default {
     name: 'AddPost',
-    // props:[''],
+     props:['name'],
     data() {
         return {
             title: '',
             content: '',
             image_path: '',
             video_url: '',
-            //nigdzie nie podane
-            subreddit_id: 0,
             errorMessage: {
                 isVisible: false,
                 content:""
@@ -66,15 +64,19 @@ export default {
                 return
             }
 
+            if(this.image_path === '')
+                this.image_path = null
+
+             if(this.video_url === '')
+                this.video_url = null    
+
             const newPost = {
                 title: this.title,
                 content: this.content,
                 image_path: this.image_path,
                 video_url: this.video_url,
-                subreddit_id: this.subreddit_id,
-                // name: this.subName,
-                // description: this.subDescription,
-                // nickname: localStorage.getItem("nickname"),
+                name: this.name,
+                nickname: sessionStorage.getItem("nickname")
             }
             socket.emit('addPost', newPost);
             this.title = '';
