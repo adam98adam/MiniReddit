@@ -29,9 +29,9 @@ export default {
     data() {
         {
             return {
-                subreddits:[],
-                port:3000,
-                editable:false,
+                subreddits: [],
+                port: 3000,
+                editable: false,
                 showAddSubreddit: false,
                 addSubredditText: "Create Subreddit",
             }

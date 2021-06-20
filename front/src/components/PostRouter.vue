@@ -10,7 +10,7 @@
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
-        <button id="click" type="button" class="btn btn-dark">Click</button>
+        <button @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
@@ -62,7 +62,12 @@ export default {
             } else {
                 this.showErrorMessage("Log in to vote");
             }
-        }
+        },
+        async goToComments() {
+            console.log();
+            //TODO
+            this.$router.push(`/r/bohemians/${this.id}`);
+        },
     },
     async created() {
         // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
@@ -96,7 +101,7 @@ export default {
                         "counter content content content"
                         "error content content content"
                         "bottom-arrow content content content"
-                        "acc click click xdc"
+                        "acc comments comments xdc"
 }
 
 .grid-container > #up-arrow {
@@ -136,9 +141,6 @@ export default {
     color:red;
 }
 
-
-
-
 .grid-container > #creation-date {
     grid-area: creation-date;
     text-align: center;
@@ -166,8 +168,8 @@ export default {
     align-items: center;
 }
 
-.grid-container > #click {
-    grid-area: click;
+.grid-container > #comments {
+    grid-area: comments;
     align-items: center;
 }
 
@@ -178,6 +180,4 @@ export default {
 .grid-container > #bottom-arrow > a:hover {
    color:blue;
 }
-
-
 </style>

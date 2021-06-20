@@ -261,6 +261,22 @@ io.sockets.on("connect", (socket) => {
         io.to(socket.id).emit('activated');
     });
 
+    socket.on("getSinglePost", async (data) => {
+        const post = await pg.query(
+            `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end 
+            as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id 
+            inner join reddit_user r on p.user_id=r.id where s.name = '${data.name}' and p.id='${data.id}';`
+        );
+        io.to(socket.id).emit('getSinglePost', post);
+    });
+
+    socket.on("getComments", async (data) => {
+        console.log(data);
+        const comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data}';`);
+        console.log(comments.rows);
+        io.to(socket.id).emit('getComments', comments);
+    });
+
     // socket.on("getSubreddits", async () => {
     //     const subreddits = await pg.query("SELECT * FROM subreddit");
     //     io.sockets.emit('getSubreddits', subreddits);
