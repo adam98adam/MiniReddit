@@ -1,0 +1,127 @@
+<template>
+    <form @submit="onSubmit" class="add-form">
+        <div class="container">
+            <div class="form-control">
+                <label>Title</label>
+                <input type="text" v-model="title" name="title" placeholder="Add title" />
+            </div>
+            <div class="form-control">
+                <label>Content</label>
+                <input type="text" v-model="content" name="content" placeholder="Add content" />
+            </div>
+            <div class="form-control">
+                <label>Image path</label>
+                <input type="text" v-model="image_path" name="image_path" placeholder="Add image path" />
+            </div>
+            <div class="form-control">
+                <label>Video url</label>
+                <input type="text" v-model="video_url" name="video_url" placeholder="Add video url" />
+            </div>
+            <input type="submit" value="Confirm" class="btn postButton" />
+            <div id="error-message" v-if="errorMessage.isVisible" >
+                {{ errorMessage.content }}
+            </div>
+        </div>
+    </form>
+</template>
+
+<script>
+import socket from '../socketConnection'
+
+export default {
+    name: 'AddPost',
+    // props:[''],
+    data() {
+        return {
+            title: '',
+            content: '',
+            image_path: '',
+            video_url: '',
+            //nigdzie nie podane
+            subreddit_id: 0,
+            errorMessage: {
+                isVisible: false,
+                content:""
+            }
+        }
+    },
+    methods: {
+        showErrorMessage(message) {
+            this.errorMessage.content = message;
+            this.errorMessage.isVisible = true;
+            setTimeout(() => {
+                this.errorMessage.isVisible = false;
+            }, 6000);
+        },
+        onSubmit(e) {
+            e.preventDefault()
+            if (!this.title) {
+                this.showErrorMessage('Please add post title');
+                //alert('Please add post title')
+                return
+            }
+            if (!this.content) {
+                this.showErrorMessage('Please add post content');
+                //alert('Please add post content')
+                return
+            }
+
+            const newPost = {
+                title: this.title,
+                content: this.content,
+                image_path: this.image_path,
+                video_url: this.video_url,
+                subreddit_id: this.subreddit_id,
+                // name: this.subName,
+                // description: this.subDescription,
+                // nickname: localStorage.getItem("nickname"),
+            }
+            socket.emit('addPost', newPost);
+            this.title = '';
+            this.content = '';
+            this.image_path = '';
+            this.video_url = '';
+        },
+    },
+}
+</script>
+
+<style scoped>
+.container {
+    width: 25rem;
+    display: flex;
+    flex-flow: column;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0rem;
+}
+
+.form-control {
+    margin-top: 3rem;
+    border: none;
+}
+
+.form-control label {
+    border: none;
+}
+
+.form-control input {
+    width: 100%;
+    height: 3rem;
+    padding: 0.5rem 0.5rem;
+    /* font-size: 17px; */
+}
+
+.postButton {
+    margin-top: 4rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background: greenyellow;
+}
+
+#error-message {
+	text-align: center;
+	color: red;
+	margin-top: 12px;
+}
+</style>
