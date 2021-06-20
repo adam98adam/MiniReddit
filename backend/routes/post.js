@@ -145,14 +145,20 @@ router.delete("/id=:id", async (req, res) => {
     return res.status(200).send("Deleted.");
 });
 
-router.get("/isModerator/:subreddit_name", async (req, res) => {
-    if (!req.user)
+router.get("/isModerator/:subreddit_name/:nickname", async (req, res) => {
+    if(req.params.nickname === '')
         return res.status(400).json(false);
+    //console.log("log : " + req.user.id)
+    //if (!req.user)
+        //return res.status(400).json(false);
+    
+    const user_id = await client.query(`select id from reddit_user where nickname = '${req.params.nickname}'`)
+
     let isModerator = false;
     // const user = await client.query(`SELECT * FROM reddit_user WHERE nickname='${req.user.id}';`);
     const globalModerator = await client.query(
         `SELECT * FROM reddit_user AS u INNER JOIN user_role AS b ON u.id=b.user_id 
-        INNER JOIN role as r ON b.role_id=r.id WHERE u.id='${req.user.id}';`
+        INNER JOIN role as r ON b.role_id=r.id WHERE u.id='${user_id.rows[0].id}';`
     );
     // console.log("rows length: ", globalModerator.rows.length);
     
@@ -161,7 +167,7 @@ router.get("/isModerator/:subreddit_name", async (req, res) => {
     
     const subreddit = await client.query(`SELECT * FROM subreddit WHERE name='${req.params.subreddit_name}';`);
     const subredditModerator = await client.query(
-        `SELECT * FROM subreddit_user WHERE user_id='${req.user.id}' and subreddit_id='${subreddit.rows[0].id}';`
+        `SELECT * FROM subreddit_user WHERE user_id='${user_id.rows[0].id}' and subreddit_id='${subreddit.rows[0].id}';`
     );
     // console.log("rows length: ", subredditModerator.rows.length);
     

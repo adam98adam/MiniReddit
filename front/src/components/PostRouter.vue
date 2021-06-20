@@ -56,8 +56,13 @@ export default {
             socket.emit("deletePost", this.id);
         },
         async getAll() {
+            let isNickname = ''
+            if(sessionStorage.getItem("nickname"))
+                isNickname = sessionStorage.getItem("nickname")
+    
+
             await fetch(
-                `http://localhost:3000/post/isModerator/${this.subreddit_name}`,
+                `http://localhost:3000/post/isModerator/${this.subreddit_name}/${isNickname}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -65,6 +70,7 @@ export default {
             ).then((data) => {
                 console.log(data.ok);
                 this.isModerator = data.ok;
+                console.log(this.isModerator)
             });
         },
         showErrorMessage(message) {
