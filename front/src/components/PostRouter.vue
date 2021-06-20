@@ -10,6 +10,7 @@
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
+        <button id="click" type="button" class="btn btn-dark">Click</button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
@@ -89,12 +90,13 @@ export default {
     background-color: greenyellow;
     display:grid;
     grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(5,1fr);
+    grid-template-rows: repeat(6,1fr);
     grid-template-areas: "up-arrow subreddit nickname creation-date"
                         "ac as title xd"
                         "counter content content content"
                         "error content content content"
-                        "bottom-arrow content content content";
+                        "bottom-arrow content content content"
+                        "acc click click xdc"
 }
 
 .grid-container > #up-arrow {
@@ -161,6 +163,11 @@ export default {
     grid-area: content;
     display:flex;
     justify-content: center;
+    align-items: center;
+}
+
+.grid-container > #click {
+    grid-area: click;
     align-items: center;
 }
 
