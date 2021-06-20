@@ -11,9 +11,6 @@ const user_role = fs.readFileSync(__dirname + '/../sql/user_role.sql').toString(
 const post = fs.readFileSync(__dirname + '/../sql/post.sql').toString();
 const post_vote = fs.readFileSync(__dirname + '/../sql/post_vote.sql').toString();
 const comment = fs.readFileSync(__dirname + '/../sql/comment.sql').toString();
-const survey = fs.readFileSync(__dirname + '/../sql/survey.sql').toString();
-const survey_answer = fs.readFileSync(__dirname + '/../sql/survey_answer.sql').toString();
-const survey_user_answer = fs.readFileSync(__dirname + '/../sql/survey_user_answer.sql').toString();
 const delete_records = fs.readFileSync(__dirname + '/../sql/delete.sql').toString();
 
 const dbConnData = {
@@ -40,9 +37,6 @@ client.connect().then(() => {
     client.query(post);
     client.query(post_vote);
     client.query(comment);
-    client.query(survey);
-    client.query(survey_answer);
-    client.query(survey_user_answer);
 }).catch(() => {
     console.log("Connection with postgres failed");
 });

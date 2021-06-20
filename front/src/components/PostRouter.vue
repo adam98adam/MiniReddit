@@ -5,7 +5,11 @@
         </div>
         <div id="subreddit">r/{{this.subreddit_name}}</div>
         <div id="nickname">Posted by u/{{this.user_nickname}}</div>
-        <div id="created">{{this.time}}</div>
+        <div id="creation-date">
+            <button @click="deletePost()" v-if="this.isModerator" id="deleteButton">Delete</button>
+            <br/>
+            {{this.time}}
+        </div>
         <div id="counter">{{this.counter}}</div>
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
@@ -15,12 +19,13 @@
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
         <iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe>
-        <img v-if="this.image_path!== null"   :src="this.image_path" title="description"/>
+        <img class="img" v-if="this.image_path!== null"   :src="this.image_path" title="description"/>
     </div>
 </template>
 
 <script>
 //import axios from '../services/axios'
+import socket from '../socketConnection'
 import moment from 'moment'
 import axios from 'axios';
 
@@ -32,6 +37,7 @@ export default {
             return {
                 //subreddit_name:'',
                 //nickname:'',
+                isModerator: false,
                 video_url_local: this.video_url,
                 time:'',
                 counter:0,
@@ -43,6 +49,24 @@ export default {
         }
     },
     methods: {
+        isLogged() {
+            return sessionStorage.getItem("isLogged");
+        },
+        deletePost() {
+            socket.emit("deletePost", this.id);
+        },
+        async getAll() {
+            await fetch(
+                `http://localhost:3000/post/isModerator/${this.subreddit_name}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            ).then((data) => {
+                console.log(data.ok);
+                this.isModerator = data.ok;
+            });
+        },
         showErrorMessage(message) {
             this.errorMessage.content = message;
             this.errorMessage.isVisible = true;
@@ -79,22 +103,13 @@ export default {
             this.$router.push(`/r/${this.subreddit_name}/${this.id}`);
         },
     },
-     async created() {
+    async created() {
         // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
         //const user = await axios.get(`http://localhost:3000/user/id=${this.user_id}`)
         //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
-        this.counter = this.post_votes
-        //eslint-disable-next-line
-        //this.video_url = this.video_url.replace(
-           // "watch?v=",
-            //"/embed/"
-          //);
-        //console.log(subreddit.data)
-        //console.log(user.data)
-        //this.counter = count.data.count
-        //this.subreddit_name = subreddit.data.name
-        //this.nickname = user.data.nickname
+        this.counter = this.post_votes;
+        this.getAll();
     }
 }
 </script>
@@ -194,5 +209,18 @@ export default {
 
 .grid-container > #bottom-arrow > a:hover {
    color:blue;
+}
+
+.img {
+    width: 35vw;
+    height: 35vh;
+    @media(max-width: 800px) {
+        width: 50vw;
+        height: 50vh;
+    };
+}
+
+#deleteButton {
+    background-color: red;
 }
 </style>

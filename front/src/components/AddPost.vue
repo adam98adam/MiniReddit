@@ -11,7 +11,7 @@
             </div>
             <div class="form-control">
                 <label>Image path</label>
-                <input type="file" v-model="image_path" name="image_path" placeholder="Add image path" />
+                <input type="file" @change="uploadFile($event)" name="image_path" placeholder="Add image path" />
             </div>
             <div class="form-control">
                 <label>Video url</label>
@@ -26,14 +26,15 @@
 </template>
 
 <script>
-import socket from '../socketConnection'
+// import socket from '../socketConnection'
 //import axios from '../services/axios'
 
 export default {
     name: 'AddPost',
-     props:['name'],
+    props:['name'],
     data() {
         return {
+            subredditName: -1,
             title: '',
             content: '',
             image_path: '',
@@ -68,10 +69,11 @@ export default {
             if(this.image_path === '')
                 this.image_path = null
 
-             if(this.video_url === '')
+            if(this.video_url === '')
                 this.video_url = null    
 
             const newPost = {
+                subredditName: this.$route.params.name,
                 title: this.title,
                 content: this.content,
                 image_path: this.image_path,
@@ -80,8 +82,9 @@ export default {
                 nickname: sessionStorage.getItem("nickname")
             }
 
-            console.log(newPost.title)
+            console.log("??????? ", newPost.image_path);
             const formdata = new FormData()
+            formdata.append("subredditName",newPost.subredditName)
             formdata.append("title",newPost.title)
             formdata.append("content",newPost.content)
             formdata.append("file",newPost.image_path)
@@ -96,11 +99,17 @@ export default {
                 body: formdata,
             })
             
-            socket.emit('addPost', newPost);
+            // socket.emit('addPost', newPost);
             this.title = '';
             this.content = '';
             this.image_path = '';
             this.video_url = '';
+        },
+        uploadFile(event) {
+            this.image_path = event.target.files[0];
+            // console.log("BŁAGAM");
+            console.log(event.target.files[0]);
+            console.log(this.image_path);
         },
     },
 }

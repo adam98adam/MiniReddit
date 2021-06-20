@@ -73,12 +73,12 @@ export default {
         //this.posts = data.data
         const reg = new RegExp(".*" + content.content +".*")
         this.posts = this.orginalPosts.filter(post => {
-         return  post.content.match(reg)
+          return  post.content.match(reg)
         })
       }
     },
   },
-  async created(){ 
+  async created() { 
     //console.log(await axios.get("http://localhost:3000/user/"))
         const data = await axios.get("http://localhost:3000/post/")
         //console.log(data.data)

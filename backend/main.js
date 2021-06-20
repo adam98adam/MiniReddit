@@ -19,9 +19,6 @@ const subredditUserRouter = require("./routes/subreddit_user");
 const postRouter = require("./routes/post");
 const postVoteRouter = require("./routes/post_vote");
 const commentRouter = require("./routes/comment");
-const surveyRouter = require("./routes/survey");
-const surveyAnswerRouter = require("./routes/survey_answer");
-const surveyUserAnswerRouter = require("./routes/survey_user_answer");
 
 const pg = require("./exports/postgres");
 const socket = require("socket.io");
@@ -121,9 +118,6 @@ app.use("/subreddit_user", subredditUserRouter);
 app.use("/post", postRouter);
 app.use("/post_vote", postVoteRouter);
 app.use("/comment", commentRouter);
-app.use("/survey", surveyRouter);
-app.use("/survey_answer", surveyAnswerRouter);
-app.use("/survey_user_answer", surveyUserAnswerRouter);
 
 const server = app.listen(3000, () => {
     console.log(`listening at port 3000`);
@@ -280,6 +274,43 @@ io.sockets.on("connect", (socket) => {
         console.log(comments.rows);
         io.to(socket.id).emit('getComments', comments);
     });
+
+    socket.on("deletePost", async (data) => {
+        await pg.query(`DELETE FROM comment WHERE post_id='${data}';`);
+        await pg.query(`DELETE FROM post_vote WHERE post_id='${data}';`);
+        await pg.query(`DELETE FROM post WHERE id='${data}';`);
+        const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+
+        io.sockets.emit('allPosts', all_posts);
+    });
+
+    // socket.on("getModeratorData", async (data) => {
+    //     let isModerator = false;
+    //     // console.log(data.userNickname);
+    //     const user = await pg.query(`SELECT * FROM reddit_user WHERE nickname='${data.userNickname}';`);
+    //     // console.log(user.rows[0].id);
+    //     const globalModerator = await pg.query(
+    //         `SELECT * FROM reddit_user AS u INNER JOIN user_role AS b ON u.id=b.user_id 
+    //         INNER JOIN role as r ON b.role_id=r.id WHERE u.id='${user.rows[0].id}';`
+    //     );
+    //     // console.log("rows length: ", globalModerator.rows.length);
+        
+    //     if (globalModerator.rows.length > 0)
+    //         isModerator = true;
+        
+    //     // console.log(data.subredditName);
+    //     const subreddit = await pg.query(`SELECT * FROM subreddit WHERE name='${data.subredditName}';`);
+    //     // console.log(subreddit.rows[0].id);
+    //     const subredditModerator = await pg.query(
+    //         `SELECT * FROM subreddit_user WHERE user_id='${user.rows[0].id}' and subreddit_id='${subreddit.rows[0].id}';`
+    //     );
+    //     // console.log("rows length: ", subredditModerator.rows.length);
+        
+    //     if (subredditModerator.rows.length > 0)
+    //         isModerator = true;
+        
+    //     io.to(socket.id).emit('getModeratorData', isModerator);
+    // });
 
     // socket.on("getSubreddits", async () => {
     //     const subreddits = await pg.query("SELECT * FROM subreddit");
