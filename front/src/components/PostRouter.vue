@@ -10,10 +10,12 @@
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
-        <button @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
+        <button v-if="this.single_post" @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
+        <iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe>
+        <img v-if="this.image_path!== null"   :src="this.image_path" title="description"/>
     </div>
 </template>
 
@@ -24,12 +26,13 @@ import axios from 'axios';
 
 export default {
     name: 'PostRouter',
-    props:['id','title','content','image_path','video_url','creation_date','subreddit_name','user_nickname','post_votes'],
+    props:['id','title','content','image_path','video_url','creation_date','subreddit_name','user_nickname','post_votes','single_post'],
     data() {
         {
             return {
                 //subreddit_name:'',
                 //nickname:'',
+                video_url_local: this.video_url,
                 time:'',
                 counter:0,
                 errorMessage: {
@@ -46,6 +49,13 @@ export default {
             setTimeout(() => {
                 this.errorMessage.isVisible = false;
             }, 6000);
+        },
+        changeLink(){
+            this.video_url_local = this.video_url_local.replace(
+            "watch?v=",
+            "/embed/"        
+            )
+            return this.video_url_local;
         },
         async giveLike() {
             if(sessionStorage.getItem("isLogged")) {
@@ -66,15 +76,20 @@ export default {
         async goToComments() {
             console.log();
             //TODO
-            this.$router.push(`/r/bohemians/${this.id}`);
+            this.$router.push(`/r/${this.subreddit_name}/${this.id}`);
         },
     },
-    async created() {
+     async created() {
         // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
         //const user = await axios.get(`http://localhost:3000/user/id=${this.user_id}`)
         //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         this.counter = this.post_votes
+        //eslint-disable-next-line
+        //this.video_url = this.video_url.replace(
+           // "watch?v=",
+            //"/embed/"
+          //);
         //console.log(subreddit.data)
         //console.log(user.data)
         //this.counter = count.data.count

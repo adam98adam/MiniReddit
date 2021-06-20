@@ -4,7 +4,7 @@
         <div class="header">
             <h1>Single Post</h1>
         </div>
-        <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes"/>
+        <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="false"/>
         <!-- <button v-if="isLogged()" @click="expand" class="btn createComment">{{addCommentText}}</button>
         <div v-if="showAddComment">
             <AddComment :comments="this.comments"/>
@@ -12,8 +12,11 @@
         <div>
             <button @click="getHome()" type="button" class="btn btn-secondary">Home</button>
         </div> -->
-        <div class="comments">
+        <div v-if="checkCommets()" class="comments">
             <CommentRouter v-for="comment in comments" :key="comment.id" :id="comment.id" :content="comment.content" :user_id="comment.user_id"/>
+        </div>
+        <div v-if="!checkCommets()" id="err">
+            <h2>No Comments !!! </h2>
         </div>
     </div>
 </template>
@@ -63,6 +66,12 @@ export default {
         getHome() {
             this.$router.push("/");
         },
+        checkCommets() {
+            if(this.comments.length > 0)
+                return true
+            else
+                return false
+        }
         // expand() {
         //     this.showAddComment = !this.showAddComment;
         //     if (this.showAddComment) {
@@ -109,5 +118,10 @@ export default {
     margin-top: 2rem;
     background: cadetblue !important;
     border: 3px black solid !important;
+}
+
+#err {
+    margin-top:5rem;
+    color: red;
 }
 </style>

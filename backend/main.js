@@ -6,6 +6,9 @@ const session = require("express-session");
 const passport = require("passport");
 //const passportSocketIo = require("passport.socketio");
 
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
+
 const authRouter = require("./routes/auth");
 const redditUserRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
@@ -29,6 +32,7 @@ const app = express();
 app.use(cors({origin: "http://localhost:8080", credentials: true}));
 app.use(sessionMiddleware);
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 //app.use(express.static('../public'))
 
 /*

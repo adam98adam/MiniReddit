@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const client = require('../exports/postgres');
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
 
 router.get('/', async (req, res) => {
     console.log(req.user)
@@ -9,6 +11,7 @@ router.get('/', async (req, res) => {
         "select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id"
     );
 
+    
     if(post.rows)
         return res.send(post.rows);
 
@@ -74,7 +77,23 @@ router.get('/subreddit_id=:subreddit_id', async (req, res) => {
 });
 
 //Do przejrzenia
-router.post("/new", async (req, res) => {
+router.post("/",upload.single("file"), async (req, res) => {
+    console.log(req.file)
+    const image = "http://localhost:3000/" + req.file.path;
+    const time = await pg.query("SELECT date_trunc('second', now()::timestamp) as time;");
+    const subreddit_id = await client.query(`select id from subreddit where name = '${req.body.name}'`)
+    const postId = await client.query(
+        `insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
+        [req.body.title, req.body.content, image, req.body.video_url, time.rows[0].time, subreddit_id.rows[0].id , req.user.id]
+    );
+    
+    //subreddit_id.rows[0]
+
+    //console.log(req.file)
+    //console.log("hello123981")
+    //console.log(req.body.title)
+    //res.status(200).json("cos")
+    /*
     const postId = await client.query(
         `insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
         [req.body.Title, req.body.Content, req.body.Image_path, req.body.Video_url, req.body.Creation_date, req.body.Subreddit_id, req.body.User_id]
@@ -85,6 +104,7 @@ router.post("/new", async (req, res) => {
     );
 
     return res.send(post.rows[0]);
+    */
 });
 
 //Do przejrzenia

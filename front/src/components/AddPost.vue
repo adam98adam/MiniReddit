@@ -11,7 +11,7 @@
             </div>
             <div class="form-control">
                 <label>Image path</label>
-                <input type="text" v-model="image_path" name="image_path" placeholder="Add image path" />
+                <input type="file" v-model="image_path" name="image_path" placeholder="Add image path" />
             </div>
             <div class="form-control">
                 <label>Video url</label>
@@ -27,6 +27,7 @@
 
 <script>
 import socket from '../socketConnection'
+//import axios from '../services/axios'
 
 export default {
     name: 'AddPost',
@@ -51,7 +52,7 @@ export default {
                 this.errorMessage.isVisible = false;
             }, 6000);
         },
-        onSubmit(e) {
+        async onSubmit(e) {
             e.preventDefault()
             if (!this.title) {
                 this.showErrorMessage('Please add post title');
@@ -78,6 +79,23 @@ export default {
                 name: this.name,
                 nickname: sessionStorage.getItem("nickname")
             }
+
+            console.log(newPost.title)
+            const formdata = new FormData()
+            formdata.append("title",newPost.title)
+            formdata.append("content",newPost.content)
+            formdata.append("file",newPost.image_path)
+            formdata.append("video_url",newPost.video_url)
+            formdata.append("name",newPost.name)
+
+            
+            await fetch("http://localhost:3000/post/",
+            {
+                method: "POST",
+                credentials: "include",
+                body: formdata,
+            })
+            
             socket.emit('addPost', newPost);
             this.title = '';
             this.content = '';
