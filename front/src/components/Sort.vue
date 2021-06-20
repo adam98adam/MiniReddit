@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-       <button @click="$emit('sortPosts',sortPosts())" type="button" class="btn btn-danger">Sort</button>
+       <button @click="$emit('sortPosts',sortPosts())" type="button" class="btn btn-danger">Sort by {{order}}</button>
     </div>
 </template>
 
@@ -10,14 +10,19 @@ export default {
     data() {
         {
             return {
-                sort:false
-                }
+                sort: false,
+                order: "newest",
             }
-        },
+        }
+    },
     methods: {
         sortPosts() {
-            this.sort = !this.sort
-            return this.sort
+            this.sort = !this.sort;
+            if (this.sort)
+                this.order = "oldest";
+            else
+                this.order = "newest";
+            return this.sort;
         }
     },
     async created() {}
@@ -26,6 +31,6 @@ export default {
 
 <style>
 .main{
-    margin-top:110px;
+    margin-top: 2rem;
 }
 </style>

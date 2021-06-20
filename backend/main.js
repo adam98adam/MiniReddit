@@ -236,6 +236,31 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('getSubreddits', subreddits);
     });
 
+    socket.on("getSubredditUser", async (data) => {
+        const userId = await pg.query(`SELECT * FROM reddit_user WHERE nickname='${data.userName}';`);
+        const subredditId = await pg.query(`SELECT * FROM subreddit WHERE name='${data.subredditName}';`);
+        const isSubredditUser = await pg.query(
+            `SELECT * FROM subreddit_user 
+            WHERE user_id='${userId.rows[0].id}' and 
+            subreddit_id='${subredditId.rows[0].id}';`
+        );
+        if (isSubredditUser.rows.length === 0) {
+            io.to(socket.id).emit('getSubredditUser', false);
+        } else {
+            io.to(socket.id).emit('getSubredditUser', true);
+        }
+    });
+
+    socket.on("joinSubreddit", async (data) => {
+        const userId = await pg.query(`SELECT * FROM reddit_user WHERE nickname='${data.userName}';`);
+        const subredditId = await pg.query(`SELECT * FROM subreddit WHERE name='${data.subredditName}';`);
+        await pg.query(
+            `INSERT INTO subreddit_user(user_id, subreddit_id) 
+            VALUES('${userId.rows[0].id}', '${subredditId.rows[0].id}');`
+        );
+        io.to(socket.id).emit('activated');
+    });
+
     // socket.on("getSubreddits", async () => {
     //     const subreddits = await pg.query("SELECT * FROM subreddit");
     //     io.sockets.emit('getSubreddits', subreddits);

@@ -3,9 +3,15 @@
         <Navbar/>
         <div class="header">
             <h1>r/{{ name }}</h1>
-            <button v-if="isLogged()" @click="expand" class="btn createPost">{{addPostText}}</button>
-            <div v-if="showAddPost">
-                <AddPost :name="this.name"/>
+            <div v-if="isLogged()">
+                <div v-if="!isSubredditUser" id="joinDiv">
+                    <p>Want to post in r/{{ name }} ?</p>
+                    <button @click="joinSubreddit" class="btn joinSubreddit">Join now!</button>
+                </div>
+                <button v-if="isSubredditUser" @click="expand" class="btn createPost">{{addPostText}}</button>
+                <div v-if="showAddPost">
+                    <AddPost :name="this.name"/>
+                </div>
             </div>
         </div>
         <div id="error-message" v-if="errorMessage.isVisible" >
@@ -33,7 +39,8 @@ export default {
                 posts:[],
                 showAddPost: false,
                 addPostText: "Create Post",
-                 errorMessage: {
+                isSubredditUser: false,
+                errorMessage: {
                     isVisible: false,
                     content:""
                 }
@@ -49,6 +56,16 @@ export default {
         async getAll() {
             // console.log(this.$route.params.name);
             socket.emit('getSubredditData', this.$route.params.name);
+            if (this.isLogged())
+                socket.emit(
+                    'getSubredditUser',
+                    {
+                        userName: sessionStorage.getItem("nickname"),
+                        subredditName: this.$route.params.name,
+                    }
+                );
+            // if (sessionStorage.getItem("nickname") != null)
+            //     this.isSubredditUser = true;
         },
         isLogged() {
             return sessionStorage.getItem("isLogged");
@@ -61,6 +78,15 @@ export default {
             else {
                 this.addPostText = "Create Post";
             }
+        },
+        joinSubreddit() {
+            socket.emit(
+                'joinSubreddit',
+                {
+                    userName: sessionStorage.getItem("nickname"),
+                    subredditName: this.$route.params.name,
+                }
+            );
         },
         showErrorMessage(message) {
             this.errorMessage.content = message;
@@ -80,7 +106,14 @@ export default {
             else {
                 this.posts = posts.rows
             }
-        })
+        });
+        socket.on('getSubredditUser', async (response) => {
+            // console.log(response);
+            this.isSubredditUser = response;
+        });
+        socket.on('activated', async () => {
+            this.getAll();
+        });
     }
 }
 </script>
@@ -99,9 +132,25 @@ h1 {
     background: cadetblue !important;
     border: 3px black solid !important;
 }
+
+.joinSubreddit {
+    margin-top: 0.5rem;
+    background: cadetblue !important;
+    border: 3px black solid !important;
+}
+
 #error-message {
 	text-align: center;
 	color: red;
 	margin-top: 12px;
+}
+
+#joinDiv {
+    margin-top: 2rem;
+}
+
+#joinDiv > p {
+    color: red;
+    font-size: 1.5rem;
 }
 </style>

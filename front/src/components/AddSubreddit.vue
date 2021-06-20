@@ -43,11 +43,13 @@ export default {
         },
         onSubmit(e) {
             e.preventDefault()
+            
             if (!this.subName) {
                 this.showErrorMessage('Please add subreddit name')
                 //alert('Please add subreddit name')
                 return
             }
+
             if (!this.subDescription) {
                 this.showErrorMessage('Please add subreddit description')
                 //alert('Please add subreddit description')
@@ -62,13 +64,11 @@ export default {
 
             });
 
-            if(isRepeated === true) {
+            if (isRepeated === true) {
                 this.showErrorMessage('Subreddit already exists')
                 //alert('Subreddit already exists')
                 return
             }
-
-
 
             const newSubreddit = {
                 name: this.subName,

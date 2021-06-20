@@ -32,6 +32,6 @@ export default {
 
 <style>
 .main {
-    margin-top:90px;
+    margin-top: 3rem;
 }
 </style>
