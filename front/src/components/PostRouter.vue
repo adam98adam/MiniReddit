@@ -7,6 +7,7 @@
         <div id="nickname">Posted by u/{{this.user_nickname}}</div>
         <div id="created">{{this.time}}</div>
         <div id="counter">{{this.counter}}</div>
+        <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
         <div id="bottom-arrow">
@@ -46,7 +47,7 @@ export default {
             }, 6000);
         },
         async giveLike() {
-            if(localStorage.getItem("isLogged")) {
+            if(sessionStorage.getItem("isLogged")) {
                 console.log("giveLike")
                 await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=1`)
             } else {
@@ -54,7 +55,7 @@ export default {
             }
         },
         async giveDislike() {
-            if(localStorage.getItem("isLogged")) {
+            if(sessionStorage.getItem("isLogged")) {
                 console.log("giveDislake")
                 await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=-1`)
             } else {
@@ -88,8 +89,9 @@ export default {
     background-color: greenyellow;
     display:grid;
     grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(4,1fr);
+    grid-template-rows: repeat(5,1fr);
     grid-template-areas: "up-arrow subreddit nickname creation-date"
+                        "ac as title xd"
                         "counter content content content"
                         "error content content content"
                         "bottom-arrow content content content";
@@ -115,6 +117,25 @@ export default {
     grid-area: nickname;
     text-align: center;
 }
+
+.grid-container > #hr1 {
+    grid-area: hr1;
+    text-align: center;
+}
+
+.grid-container > #hr2 {
+    grid-area: hr2;
+    text-align: center;
+}
+
+.grid-container > #title {
+    grid-area: title;
+    text-align: center;
+    color:red;
+}
+
+
+
 
 .grid-container > #creation-date {
     grid-area: creation-date;
@@ -150,4 +171,6 @@ export default {
 .grid-container > #bottom-arrow > a:hover {
    color:blue;
 }
+
+
 </style>

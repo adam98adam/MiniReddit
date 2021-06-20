@@ -42,7 +42,8 @@ export default {
         socket.emit('getData')
     },
     isLogged() {
-      return localStorage.getItem("isLogged");
+      return sessionStorage.getItem("isLogged");
+      //return localStorage.getItem("isLogged");
     },
     sortPosts(sort){
       console.log("Sort");

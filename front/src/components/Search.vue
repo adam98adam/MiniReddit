@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <input @click="this.data.subreddit=true" type="radio" id="subreddit" name="search" value="subreddit">
+        <input @click="this.data.subreddit=true" type="radio" id="subreddit" name="search" value="subreddit" checked>
         <label for="subreddit">Subreddit</label>
         <input @click="this.data.subreddit=false" type="radio" id="content" name="search" value="content">
         <label for="content">Content</label>
@@ -18,7 +18,7 @@ export default {
         {
             return {
                 data:{
-                    subreddit: false,
+                    subreddit: true,
                     content:''
                 }
 

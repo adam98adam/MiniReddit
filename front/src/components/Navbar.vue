@@ -39,16 +39,21 @@ export default {
           this.$router.push("/login");
       },
       logout() {
-           localStorage.removeItem("nickname");
-           localStorage.removeItem("isLogged");
+           //localStorage.removeItem("nickname");
+           //localStorage.removeItem("isLogged");
+           sessionStorage.removeItem("nickname");
+           sessionStorage.removeItem("isLogged");
            this.$router.go(0);
       },
       showItem() {
-          return localStorage.getItem("isLogged");
+          return sessionStorage.getItem("isLogged");
+          //return localStorage.getItem("isLogged");
       },
       showNickname() {
-          if(localStorage.getItem("nickname") !== null)
-            return localStorage.getItem("nickname")
+          if(sessionStorage.getItem("nickname") !== null)
+            return sessionStorage.getItem("nickname")
+          //if(localStorage.getItem("nickname") !== null)
+            //return localStorage.getItem("nickname")
       }
   },
 }

@@ -65,8 +65,10 @@ export default {
               this.$router.push("/");
               //document.cookie = "isLogged=true"
               //sessionStorage.setItem("isLogged", "true")
-              localStorage.setItem("nickname",this.nickname)
-              localStorage.setItem("isLogged", "true")   
+              sessionStorage.setItem("nickname", this.nickname);
+              sessionStorage.setItem("isLogged","true")
+              //localStorage.setItem("nickname",this.nickname)
+              //localStorage.setItem("isLogged", "true")   
           }).catch((error) => {
               console.log(error)
               this.showErrorMessage("Wrong Credentials")

@@ -47,7 +47,8 @@ export default {
             socket.emit('getSubreddits');
         },
         isLogged() {
-            return localStorage.getItem("isLogged");
+            return sessionStorage.getItem("isLogged");
+            //return localStorage.getItem("isLogged");
         },
         getHome() {
             this.$router.push("/");

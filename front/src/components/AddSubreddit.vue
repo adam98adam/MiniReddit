@@ -73,7 +73,8 @@ export default {
             const newSubreddit = {
                 name: this.subName,
                 description: this.subDescription,
-                nickname: localStorage.getItem("nickname"),
+                nickname: sessionStorage.getItem("nickname"),
+                //nickname: localStorage.getItem("nickname"),
             }
             socket.emit('addSubreddit', newSubreddit);
             this.subName = '';
