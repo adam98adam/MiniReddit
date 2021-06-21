@@ -6,7 +6,7 @@
         <div id="subreddit">r/{{this.subreddit_name}}</div>
         <div id="nickname">Posted by u/{{this.user_nickname}}</div>
         <div id="creation-date">
-            <button @click="deletePost()" v-if="this.isModerator" id="deleteButton">Delete</button>
+            <button @click="deletePost()" v-if="isModerator()" id="deleteButton">Delete</button>
             <br/>
             {{this.time}}
         </div>
@@ -14,12 +14,12 @@
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
+        <div id="video"><iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe></div>
+        <div id="image"><img class="img" v-if="this.image_path!== null"   :src="this.image_path" title="description"/></div>
         <button v-if="this.single_post" @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
-        <iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe>
-        <img class="img" v-if="this.image_path!== null"   :src="this.image_path" title="description"/>
     </div>
 </template>
 
@@ -37,7 +37,6 @@ export default {
             return {
                 //subreddit_name:'',
                 //nickname:'',
-                isModerator: false,
                 video_url_local: this.video_url,
                 time:'',
                 counter:0,
@@ -52,27 +51,16 @@ export default {
         isLogged() {
             return sessionStorage.getItem("isLogged");
         },
+           isModerator() {
+            return sessionStorage.getItem("isModerator");
+        },
         deletePost() {
-            socket.emit("deletePost", this.id);
+            socket.emit("deletePost", {postId: this.id,subreddit_name: this.subreddit_name});
         },
-        async getAll() {
-            let isNickname = ''
-            if(sessionStorage.getItem("nickname"))
-                isNickname = sessionStorage.getItem("nickname")
+  //      async getAll() {
+//
+        //},
     
-
-            await fetch(
-                `http://localhost:3000/post/isModerator/${this.subreddit_name}/${isNickname}`,
-                {
-                    method: "GET",
-                    credentials: "include",
-                }
-            ).then((data) => {
-                console.log("Data: ", data.ok);
-                this.isModerator = data.ok;
-                console.log(this.isModerator)
-            });
-        },
         showErrorMessage(message) {
             this.errorMessage.content = message;
             this.errorMessage.isVisible = true;
@@ -115,7 +103,7 @@ export default {
         //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         this.counter = this.post_votes;
-        this.getAll();
+        //this.getAll();
     }
 }
 </script>
@@ -131,13 +119,16 @@ export default {
     background-color: greenyellow;
     display:grid;
     grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(6,1fr);
+    grid-template-rows: repeat(8,1fr);
     grid-template-areas: "up-arrow subreddit nickname creation-date"
                         "ac as title xd"
                         "counter content content content"
                         "error content content content"
                         "bottom-arrow content content content"
+                        "image image video video"
+                        "image image video video"
                         "acc comments comments xdc"
+                        
 }
 
 .grid-container > #up-arrow {
@@ -199,6 +190,20 @@ export default {
 
 .grid-container > #content {
     grid-area: content;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-container > #image {
+    grid-area: image;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-container > #video {
+    grid-area: video;
     display:flex;
     justify-content: center;
     align-items: center;

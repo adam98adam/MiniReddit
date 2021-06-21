@@ -7,9 +7,6 @@
             <div v-if="showAddSubreddit">
                 <AddSubreddit :subreddits="this.subreddits"/>
             </div>
-            <div>
-                <button @click="getHome()" type="button" class="btn btn-secondary">Home</button>
-            </div>
         </div>
         <div class="subreddits">
             <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
@@ -50,9 +47,9 @@ export default {
             return sessionStorage.getItem("isLogged");
             //return localStorage.getItem("isLogged");
         },
-        getHome() {
-            this.$router.push("/");
-        },
+        // getHome() {
+        //     this.$router.push("/");
+        // },
         expand() {
             this.showAddSubreddit = !this.showAddSubreddit;
             if (this.showAddSubreddit) {

@@ -24,7 +24,7 @@ export default {
   },
   methods: {
       miniReddit(){
-          this.$router.go(0);
+          this.$router.push("/");
       },
       allSubreddits() {
           this.$router.push("/subreddits");
@@ -39,10 +39,9 @@ export default {
           this.$router.push("/login");
       },
       logout() {
-           //localStorage.removeItem("nickname");
-           //localStorage.removeItem("isLogged");
            sessionStorage.removeItem("nickname");
            sessionStorage.removeItem("isLogged");
+           sessionStorage.removeItem("isModerator");
            this.$router.go(0);
       },
       showItem() {

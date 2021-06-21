@@ -5,9 +5,6 @@
             <h1>Single Post</h1>
         </div>
         <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="false"/>
-        <div>
-            <button @click="getHome()" type="button" class="btn btn-secondary">Home</button>
-        </div>
         <div v-if="checkCommets()" class="comments">
             <CommentRouter v-for="comment in comments" :key="comment.id" :id="comment.id" :content="comment.content" :user_id="comment.user_id" :subreddit_name="this.$route.params.name" :post_id="this.$route.params.id"/>
         </div>
@@ -63,9 +60,9 @@ export default {
             return sessionStorage.getItem("isLogged");
             //return localStorage.getItem("isLogged");
         },
-        getHome() {
-            this.$router.push("/");
-        },
+        // getHome() {
+        //     this.$router.push("/");
+        // },
         checkCommets() {
             if(this.comments.length > 0)
                 return true

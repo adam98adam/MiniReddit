@@ -60,15 +60,15 @@ export default {
           await axios.post("/auth/login", {
               username: this.nickname, 
               password: this.password
-          }).then((res) => {
+          }).then(async (res) => {
               console.log(res);
-              this.$router.push("/");
-              //document.cookie = "isLogged=true"
-              //sessionStorage.setItem("isLogged", "true")
               sessionStorage.setItem("nickname", this.nickname);
               sessionStorage.setItem("isLogged","true")
-              //localStorage.setItem("nickname",this.nickname)
-              //localStorage.setItem("isLogged", "true")   
+              await axios.get(`/user/isModerator/nickname=${this.nickname}`).then((data) => {
+                  console.log(data)
+                  sessionStorage.setItem("isModerator","true")
+              }).catch((error) => console.log(error))
+              this.$router.push("/");
           }).catch((error) => {
               console.log(error)
               this.showErrorMessage("Wrong Credentials")
