@@ -68,7 +68,7 @@ export default {
                     credentials: "include",
                 }
             ).then((data) => {
-                console.log(data.ok);
+                console.log("Data: ", data.ok);
                 this.isModerator = data.ok;
                 console.log(this.isModerator)
             });
