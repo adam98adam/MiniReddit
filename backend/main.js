@@ -279,9 +279,33 @@ io.sockets.on("connect", (socket) => {
         await pg.query(`DELETE FROM comment WHERE post_id='${data}';`);
         await pg.query(`DELETE FROM post_vote WHERE post_id='${data}';`);
         await pg.query(`DELETE FROM post WHERE id='${data}';`);
-        const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+        const all_posts = await pg.query(`select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
 
         io.sockets.emit('allPosts', all_posts);
+    });
+
+    socket.on("deleteComment", async (data) => {
+        console.log("id: ", data.id);
+        console.log("post_id: ", data.post_id);
+        await pg.query(`DELETE FROM comment WHERE id='${data.id}';`);
+        const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data.post_id}';`);
+
+        io.sockets.emit('getComments', all_comments);
+    });
+
+    socket.on("addComment", async (data) => {
+        const user_id = await pg.query(`SELECT id from reddit_user where nickname = '${data.nickname}';`);
+        console.log("rows: ", user_id.rows);
+
+        await pg.query(
+            `INSERT INTO comment (content, parent_comment_id, user_id, post_id) 
+            VALUES('${data.content}', NULL, ${user_id.rows[0].id}, ${data.post_id});`
+        );
+
+        const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id=${data.post_id};`)
+        // io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
+        console.log("all_comments rows: ", all_comments.rows)
+        io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
     });
 
     // socket.on("getModeratorData", async (data) => {

@@ -90,14 +90,15 @@ export default {
             formdata.append("file",newPost.image_path)
             formdata.append("video_url",newPost.video_url)
             formdata.append("name",newPost.name)
-
             
-            await fetch("http://localhost:3000/post/",
-            {
-                method: "POST",
-                credentials: "include",
-                body: formdata,
-            })
+            await fetch(
+                "http://localhost:3000/post/",
+                {
+                    method: "POST",
+                    credentials: "include",
+                    body: formdata,
+                }
+            );
             
             // socket.emit('addPost', newPost);
             this.title = '';

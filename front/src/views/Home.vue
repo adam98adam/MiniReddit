@@ -82,8 +82,8 @@ export default {
     //console.log(await axios.get("http://localhost:3000/user/"))
         const data = await axios.get("http://localhost:3000/post/")
         //console.log(data.data)
-        this.posts = data.data
-        this.orginalPosts = data.data
+        this.posts = data.data;
+        this.orginalPosts = data.data;
         socket.on('allPosts', async (posts) => {
             // console.log('hello')
             console.log(posts.rows);
