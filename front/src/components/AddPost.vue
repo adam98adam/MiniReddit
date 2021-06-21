@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import socket from '../socketConnection'
+ import socket from '../socketConnection'
 //import axios from '../services/axios'
 
 export default {
@@ -34,7 +34,7 @@ export default {
     props:['name'],
     data() {
         return {
-            subredditName: -1,
+            subredditName: this.$route.params.name,
             title: '',
             content: '',
             image_path: '',
@@ -99,7 +99,7 @@ export default {
                 body: formdata,
             })
             
-            // socket.emit('addPost', newPost);
+            socket.emit('addPost',this.subredditName);
             this.title = '';
             this.content = '';
             this.image_path = '';
