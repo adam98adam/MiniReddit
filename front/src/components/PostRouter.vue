@@ -51,7 +51,7 @@ export default {
         isLogged() {
             return sessionStorage.getItem("isLogged");
         },
-           isModerator() {
+        isModerator() {
             return sessionStorage.getItem("isModerator");
         },
         deletePost() {

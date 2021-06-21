@@ -235,6 +235,14 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('getSubreddits', subreddits);
     });
 
+    socket.on("changeSubreddit", async (changeSubreddit) => {
+        console.log("123: ", changeSubreddit.id);
+        await pg.query(`UPDATE subreddit SET name='${changeSubreddit.name}', description='${changeSubreddit.description}' WHERE id=${changeSubreddit.id};`);
+
+        const subreddits = await pg.query("SELECT * FROM subreddit;");
+        io.sockets.emit('getSubreddits', subreddits);
+    });
+
     socket.on("getSubredditUser", async (data) => {
         const userId = await pg.query(`SELECT * FROM reddit_user WHERE nickname='${data.userName}';`);
         const subredditId = await pg.query(`SELECT * FROM subreddit WHERE name='${data.subredditName}';`);
