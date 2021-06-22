@@ -28,6 +28,7 @@
 import socket from '../socketConnection'
 import moment from 'moment'
 import axios from 'axios';
+import ngrok from '../ngrok'
 
 export default {
     name: 'PostRouter',
@@ -55,7 +56,7 @@ export default {
             return sessionStorage.getItem("isModerator");
         },
         deletePost() {
-            socket.emit("deletePost", {postId: this.id,subreddit_name: this.subreddit_name});
+            socket.emit("deletePost", {postId: this.id,subreddit_name: this.subreddit_name,nickname : sessionStorage.getItem("nickname")});
         },
   //      async getAll() {
 //
@@ -78,7 +79,7 @@ export default {
         async giveLike() {
             if(sessionStorage.getItem("isLogged")) {
                 console.log("giveLike")
-                await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=1`)
+                await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
             } else {
                 this.showErrorMessage("Log in to vote");
             }
@@ -86,7 +87,7 @@ export default {
         async giveDislike() {
             if(sessionStorage.getItem("isLogged")) {
                 console.log("giveDislake")
-                await axios.get(`http://localhost:3000/post_vote/post_id=${this.id}/vote=-1`)
+                await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=-1`)
             } else {
                 this.showErrorMessage("Log in to vote");
             }

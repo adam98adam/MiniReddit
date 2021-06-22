@@ -27,9 +27,11 @@ const socket = require("socket.io");
 const sessionMiddleware = session({ secret: "changeit", resave: false, saveUninitialized: false });
 const app = express();
 app.use(cors({origin: "http://localhost:8080", credentials: true}));
+//app.use(cors({origin: "http://a40c670e2b8a.eu.ngrok.io", credentials: true}));
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+app.use("", express.static("../front/dist/"));
 //app.use(express.static('../public'))
 
 /*
@@ -128,6 +130,7 @@ const io = socket(
     {
         cors: {
             origin: "http://localhost:8080",
+            //origin: "http://a40c670e2b8a.eu.ngrok.io",
             methods: ["GET","POST","PUT","DELETE"]
         }
     }
@@ -292,6 +295,8 @@ io.sockets.on("connect", (socket) => {
         const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
         io.sockets.emit('getSubredditData', posts_subreddit);
         io.sockets.emit('allPosts', all_posts);
+        socket.broadcast.emit('getSinglePost', {post_count: 0,error_message: `This post has been deleted by ${data.nickname}`});
+        io.to(socket.id).emit('getSinglePost', {post_count: 0,error_message: `This post has been deleted by you`} );
         //const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
         // io.sockets.emit('allPosts', all_posts);
     });

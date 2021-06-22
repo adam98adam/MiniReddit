@@ -27,6 +27,7 @@
 
 <script>
  import socket from '../socketConnection'
+ import ngrok from '../ngrok'
 //import axios from '../services/axios'
 
 export default {
@@ -92,7 +93,7 @@ export default {
             formdata.append("name",newPost.name)
             
             await fetch(
-                "http://localhost:3000/post/",
+                `${ngrok}/post/`,
                 {
                     method: "POST",
                     credentials: "include",

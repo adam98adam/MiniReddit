@@ -30,6 +30,7 @@
 <script>
 import HomeButton from '../components/HomeButton.vue'
 import axios from '../services/axios'
+import ngrok from '../ngrok'
 
 export default {
   name: 'EditUser',
@@ -58,7 +59,7 @@ export default {
       }, 6000);
     },
     async changePassword() {
-      await axios.put("/user", {
+      await axios.put(`${ngrok}/user`, {
           OldPassword: this.oldPassword,
           NewPassword: this.newPassword,
           ConfirmPassword:this.confirmPassword

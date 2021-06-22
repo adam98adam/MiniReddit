@@ -7,7 +7,7 @@ import Register from '../views/Register'
 import EditUser from '../views/EditUser'
 import Subreddits from '../views/Subreddits.vue'
 import Subreddit from '../views/Subreddit.vue'
-import Comments from '../views/Comments.vue'
+import SinglePost from '../views/SinglePost.vue'
 
 const routes = [
     {
@@ -57,8 +57,8 @@ const routes = [
     },
     {
         path: '/r/:name/:id',
-        name: 'Comments',
-        component: Comments,
+        name: 'SinglePost',
+        component: SinglePost,
     },
 ];
 

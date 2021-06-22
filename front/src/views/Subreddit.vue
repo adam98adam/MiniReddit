@@ -28,7 +28,7 @@ import Navbar from '../components/Navbar.vue'
 import PostRouter from '../components/PostRouter'
 import AddPost from '../components/AddPost'
 import socket from '../socketConnection'
-import axios from '../services/axios'
+//import axios from '../services/axios'
 
 export default {
     name: 'Subreddit',
@@ -97,7 +97,7 @@ export default {
         },
     },
     async created() { 
-        console.log(await axios.get("http://localhost:3000/user/"));
+        //console.log(await axios.get("http://localhost:3000/user/"));
         console.log(this.$route.params.name);
         this.getAll();
         socket.on('getSubredditData', async (posts) => {

@@ -19,6 +19,7 @@ import Sort from '../components/Sort.vue'
 import PostRouter from '../components/PostRouter'
 import socket from '../socketConnection'
 import axios from '../services/axios'
+import ngrok from '../ngrok'
 
 export default {
   name: 'Home',
@@ -80,7 +81,8 @@ export default {
   },
   async created() { 
     //console.log(await axios.get("http://localhost:3000/user/"))
-        const data = await axios.get("http://localhost:3000/post/")
+        //const data = await axios.get("http://localhost:3000/post/")
+        const data = await axios.get(`${ngrok}/post/`)
         //console.log(data.data)
         this.posts = data.data;
         this.orginalPosts = data.data;

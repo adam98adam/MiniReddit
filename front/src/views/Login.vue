@@ -28,6 +28,7 @@
 <script>
 import HomeButton from '../components/HomeButton.vue'
 import axios from '../services/axios'
+import ngrok from '../ngrok'
 
 export default {
   name: 'Login',
@@ -57,14 +58,14 @@ export default {
         }, 6000);
       },
       async login() {
-          await axios.post("/auth/login", {
+          await axios.post(`${ngrok}/auth/login`, {
               username: this.nickname, 
               password: this.password
           }).then(async (res) => {
               console.log(res);
               sessionStorage.setItem("nickname", this.nickname);
               sessionStorage.setItem("isLogged","true")
-              await axios.get(`/user/isModerator/nickname=${this.nickname}`).then((data) => {
+              await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`).then((data) => {
                   console.log(data)
                   sessionStorage.setItem("isModerator","true")
               }).catch((error) => console.log(error))

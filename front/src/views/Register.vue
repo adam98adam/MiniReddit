@@ -37,6 +37,7 @@
 <script>
 import HomeButton from '../components/HomeButton.vue'
 import axios from '../services/axios'
+import ngrok from '../ngrok'
 
 export default {
   name: 'Register',
@@ -68,7 +69,7 @@ export default {
         }, 6000);
       },
       async register() {
-        await axios.post("/user", {
+        await axios.post(`${ngrok}/user`, {
             Nickname: this.nickname, 
             Password: this.password1,
             ConfirmPassword: this.password2,

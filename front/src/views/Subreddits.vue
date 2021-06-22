@@ -19,7 +19,7 @@ import Navbar from '../components/Navbar.vue'
 import SubredditRouter from '../components/SubredditRouter'
 import AddSubreddit from '../components/AddSubreddit'
 import socket from '../socketConnection'
-import axios from '../services/axios'
+//import axios from '../services/axios'
 
 export default {
     name: 'Subreddits',
@@ -62,7 +62,7 @@ export default {
     },
     computed: {},
     async created() { 
-        console.log(await axios.get("http://localhost:3000/user/"));
+        //console.log(await axios.get("http://localhost:3000/user/"));
         this.getAll();
         socket.on('getSubreddits', async (subreddits) => {
             console.log(subreddits.rows);

@@ -16,6 +16,7 @@
 <script>
 // import axios from '../services/axios'
 import socket from '../socketConnection'
+import ngrok from '../ngrok'
 // import moment from 'moment'
 // import axios from 'axios';
 
@@ -55,7 +56,7 @@ export default {
     
 
             await fetch(
-                `http://localhost:3000/post/isModerator/${this.subreddit_name}/${isNickname}`,
+                `${ngrok}/post/isModerator/${this.subreddit_name}/${isNickname}`,
                 {
                     method: "GET",
                     credentials: "include",
