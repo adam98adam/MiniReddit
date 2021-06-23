@@ -59,7 +59,7 @@ export default {
           //);
       }
     },
-    async searchPosts(content){
+    async searchPosts(content) {
       if(content.subreddit)
       {
         //const data = await axios.get(`http://localhost:3000/post/subreddit=${content.content}`)

@@ -6,27 +6,29 @@
         <div id="counter">{{this.counter}}</div>
         <div id="title">Title : {{this.title}}</div> -->
         <!-- <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div> -->
-        <div id="id">{{this.id}}</div>
+        <!-- <div id="id">{{this.id}}</div> -->
+        <div id="placeholder"></div>
         <div id="content">{{this.content}}</div>
-        <div id="user_id">{{this.user_id}}</div>
-        <button @click="deleteComment()" v-if="this.isModerator" id="deleteCommentButton">Delete</button>
+        <div id="user_id">Posted by u/{{this.nickname}}</div>
+        <button @click="deleteComment()" v-if="isOwner() || isModerator()" id="deleteCommentButton">Delete</button>
+        <!-- this.isModerator -->
     </div>
 </template>
 
 <script>
 // import axios from '../services/axios'
 import socket from '../socketConnection'
-import ngrok from '../ngrok'
+// import ngrok from '../ngrok'
 // import moment from 'moment'
 // import axios from 'axios'
 
 export default {
     name: 'CommentRouter',
-    props:['id', 'content', 'user_id', 'subreddit_name', 'post_id'],
+    props:['id', 'content', 'user_id', 'subreddit_name', 'post_id', 'nickname'],
     data() {
         {
             return {
-                isModerator: false,
+                // isModerator: false,
                 //subreddit_name:'',
                 //nickname:'',
                 // time:'',
@@ -39,6 +41,14 @@ export default {
         }
     },
     methods: {
+        isOwner() {
+            console.log("sesja: ", sessionStorage.getItem("nickname"));
+            console.log("zapytanie: ", this.nickname);
+            if (sessionStorage.getItem("nickname") == this.nickname)
+                return true;
+            else
+                return false;
+        },
         deleteComment() {
             // console.log("Usuwam: ", this.id);
             socket.emit(
@@ -49,24 +59,27 @@ export default {
                 }
             );
         },
-        async getAll() {
-            let isNickname = ''
-            if(sessionStorage.getItem("nickname"))
-                isNickname = sessionStorage.getItem("nickname")
-    
-
-            await fetch(
-                `${ngrok}/post/isModerator/${this.subreddit_name}/${isNickname}`,
-                {
-                    method: "GET",
-                    credentials: "include",
-                }
-            ).then((data) => {
-                console.log("Data: ", data.ok);
-                this.isModerator = data.ok;
-                console.log(this.isModerator)
-            });
+        isModerator() {
+            return sessionStorage.getItem("isModerator");
         },
+        // async getAll() {
+        //     let isNickname = '';
+        //     if(sessionStorage.getItem("nickname"))
+        //         isNickname = sessionStorage.getItem("nickname");
+
+        //     // await fetch(-
+        //     //     `${ngrok}/post/isModerator/${this.subreddit_name}/${isNickname}`,
+        //     //     {
+        //     //         method: "GET",
+        //     //         credentials: "include",
+        //     //     }
+        //     // ).then((data) => {
+        //     //     console.log("Data: ", data);
+        //     //     console.log("Data: ", data.ok);
+        //     //     this.isModerator = data.ok;
+        //     //     console.log(this.isModerator)
+        //     // });
+        // },
         // showErrorMessage(message) {
         //     this.errorMessage.content = message;
         //     this.errorMessage.isVisible = true;
@@ -102,7 +115,7 @@ export default {
         //this.counter = count.data.count
         //this.subreddit_name = subreddit.data.name
         //this.nickname = user.data.nickname
-        this.getAll();
+        // this.getAll();
     }
 }
 </script>
@@ -117,17 +130,17 @@ export default {
     border: 3px solid black;
     background-color: greenyellow;
     display:grid;
-    grid-template-columns: 1fr, 1fr, 1fr;
-    grid-template-rows: 1fr, 1fr, 1fr;
-    grid-template-areas:"id user_id deleteCommentButton"
+    grid-template-columns: 1fr, 1fr;
+    grid-template-rows: 1fr, 1fr;
+    grid-template-areas:"user_id placeholder deleteCommentButton"
                         "content content content"
                         "content content content"
 }
 
-.comment-container > #id {
+/* .comment-container > #id {
     grid-area: id;
     text-align: center;
-}
+} */
 
 .comment-container > #user_id {
     grid-area: user_id;
@@ -142,6 +155,15 @@ export default {
 
 .comment-container > #content {
     grid-area: content;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.comment-container > #placeholder {
+    grid-area: placeholder;
     display:flex;
     justify-content: center;
     align-items: center;

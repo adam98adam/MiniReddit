@@ -6,7 +6,7 @@
         <div id="subreddit">r/{{this.subreddit_name}}</div>
         <div id="nickname">Posted by u/{{this.user_nickname}}</div>
         <div id="creation-date">
-            <button @click="deletePost()" v-if="isModerator()" id="deleteButton">Delete</button>
+            <button @click="deletePost()" v-if="isModerator() || postOwner()" id="deleteButton">Delete</button>
             <br/>
             {{this.time}}
         </div>
@@ -64,10 +64,14 @@ export default {
         deletePost() {
             socket.emit("deletePost", {postId: this.id,subreddit_name: this.subreddit_name,nickname : sessionStorage.getItem("nickname")});
         },
-  //      async getAll() {
-//
-        //},
-    
+        postOwner() {
+            if (sessionStorage.getItem("nickname") !== null && sessionStorage.getItem("nickname") === this.user_nickname) {
+                // if (sessionStorage.getItem("nickname") === this.user_nickname)
+                return true;
+            } else {
+                return false;
+            }
+        },
         showErrorMessage(message) {
             this.errorMessage.content = message;
             this.errorMessage.isVisible = true;

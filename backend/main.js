@@ -284,7 +284,11 @@ io.sockets.on("connect", (socket) => {
 
     socket.on("getComments", async (data) => {
         console.log(data);
-        const comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data}';`);
+        // const comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data}';`);
+        const comments = await pg.query(
+            `SELECT c.id, c.content, c.parent_comment_id, c.user_id, c.post_id, u.nickname 
+            FROM comment AS c INNER JOIN reddit_user AS u ON c.user_id=u.id WHERE c.post_id='${data}';`
+        );
         console.log(comments.rows);
         io.to(socket.id).emit('getComments', comments);
     });
@@ -307,7 +311,11 @@ io.sockets.on("connect", (socket) => {
         console.log("id: ", data.id);
         console.log("post_id: ", data.post_id);
         await pg.query(`DELETE FROM comment WHERE id='${data.id}';`);
-        const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data.post_id}';`);
+        // const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id='${data.post_id}';`);
+        const all_comments = await pg.query(
+            `SELECT c.id, c.content, c.parent_comment_id, c.user_id, c.post_id, u.nickname 
+            FROM comment AS c INNER JOIN reddit_user AS u ON c.user_id=u.id WHERE c.post_id='${data.post_id}';`
+        );
 
         io.sockets.emit('getComments', all_comments);
     });
@@ -321,7 +329,11 @@ io.sockets.on("connect", (socket) => {
             VALUES('${data.content}', NULL, ${user_id.rows[0].id}, ${data.post_id});`
         );
 
-        const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id=${data.post_id};`)
+        // const all_comments = await pg.query(`SELECT * FROM comment WHERE post_id=${data.post_id};`);
+        const all_comments = await pg.query(
+            `SELECT c.id, c.content, c.parent_comment_id, c.user_id, c.post_id, u.nickname 
+            FROM comment AS c INNER JOIN reddit_user AS u ON c.user_id=u.id WHERE c.post_id='${data.post_id}';`
+        );
         // io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
         console.log("all_comments rows: ", all_comments.rows)
         io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});

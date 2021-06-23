@@ -117,7 +117,6 @@ export default {
         },
         uploadFile(event) {
             this.image_path = event.target.files[0];
-            // console.log("BŁAGAM");
             console.log(event.target.files[0]);
             console.log(this.image_path);
         },
