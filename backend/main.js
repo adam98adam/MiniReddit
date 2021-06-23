@@ -339,47 +339,39 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
     });
 
-    // socket.on("getModeratorData", async (data) => {
-    //     let isModerator = false;
-    //     // console.log(data.userNickname);
-    //     const user = await pg.query(`SELECT * FROM reddit_user WHERE nickname='${data.userNickname}';`);
-    //     // console.log(user.rows[0].id);
-    //     const globalModerator = await pg.query(
-    //         `SELECT * FROM reddit_user AS u INNER JOIN user_role AS b ON u.id=b.user_id 
-    //         INNER JOIN role as r ON b.role_id=r.id WHERE u.id='${user.rows[0].id}';`
-    //     );
-    //     // console.log("rows length: ", globalModerator.rows.length);
-        
-    //     if (globalModerator.rows.length > 0)
-    //         isModerator = true;
-        
-    //     // console.log(data.subredditName);
-    //     const subreddit = await pg.query(`SELECT * FROM subreddit WHERE name='${data.subredditName}';`);
-    //     // console.log(subreddit.rows[0].id);
-    //     const subredditModerator = await pg.query(
-    //         `SELECT * FROM subreddit_user WHERE user_id='${user.rows[0].id}' and subreddit_id='${subreddit.rows[0].id}';`
-    //     );
-    //     // console.log("rows length: ", subredditModerator.rows.length);
-        
-    //     if (subredditModerator.rows.length > 0)
-    //         isModerator = true;
-        
-    //     io.to(socket.id).emit('getModeratorData', isModerator);
-    // });
+    socket.on("postLikes", async(data) => {
+        const user_id = await pg.query(`SELECT id FROM reddit_user where nickname = '${data.nickname}';`);
+        const postVote = await pg.query(
+            "select * from post_vote where post_id = $1 and user_id = $2;",
+            [data.post_id, user_id.rows[0].id]
+        );
 
-    // socket.on("getSubreddits", async () => {
-    //     const subreddits = await pg.query("SELECT * FROM subreddit");
-    //     io.sockets.emit('getSubreddits', subreddits);
-    // });
-
-    /*
-    console.log(socket)
-    const session = socket.request.session;
-    console.log(`Socket.io: saving sid ${socket.id} in session ${session.id}`);
-    session.socketId = socket.id;
-    session.socketId = socket.id
-    console.log("JP 100% " + session.socketId);
-    console.log(session)
-    session.save();
-    */
+        // if (postVote.rows[0]) {
+        //     if (postVote.rows[0].vote === data.vote) {
+        //         await pg.query(
+        //             "delete from post_vote where post_id = $1 and user_id = $2",
+        //             [data.post_id,user_id.rows[0].id]
+        //         );
+        //         const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+        //         io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been revoked by ${data.nickname};`});
+        //         io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been revoked by you`});
+        //     } else {
+        //         await pg.query(
+        //             "update post_vote set vote = $1 where post_id = $2 and user_id = $3;",
+        //             [data.vote, data.post_id,user_id.rows[0].id]
+        //         );
+        //         const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+        //         io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been changed by ${data.nickname};`});
+        //         io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been changed by you`});
+        //     }
+        // } else {
+        //     await pg.query(
+        //         `insert into post_vote(vote, user_id, post_id) values($1, $2, $3) RETURNING ID;`,
+        //         [data.vote, user_id.rows[0].id, data.post_id]
+        //     );
+        //     const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+        //     io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been added by ${data.nickname};`});
+        //     io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been added by you`});
+        // }
+    });
 });

@@ -11,6 +11,7 @@
             {{this.time}}
         </div>
         <div id="counter">{{this.counter}}</div>
+        <!-- <div id="counter">{{this.votes}}</div> -->
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
@@ -36,11 +37,10 @@ export default {
     data() {
         {
             return {
-                //subreddit_name:'',
-                //nickname:'',
                 video_url_local: this.video_url,
                 time:'',
                 counter:0,
+                // votes: this.post_votes,
                 errorMessage: {
                     isVisible: false,
                     content:""
@@ -102,9 +102,28 @@ export default {
                 this.showErrorMessage("Log in to vote");
             }
         },
+        // async giveLike() {
+        //     if(sessionStorage.getItem("isLogged")) {
+        //         console.log("giveLike")
+        //         //socket post like
+        //         socket.emit("postLikes",{post_id: this.id, vote: 1, subreddit_name: this.subreddit_name, nickname: sessionStorage.getItem("nickname")})
+        //         //await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
+        //     } else {
+        //         this.showErrorMessage("Log in to vote");
+        //     }
+        // },
+        // async giveDislike() {
+        //     if(sessionStorage.getItem("isLogged")) {
+        //         console.log("giveDislake")
+        //         //socket post dislike
+        //         socket.emit("postLikes",{post_id: this.id, vote: -1, subreddit_name: this.subreddit_name ,nickname: sessionStorage.getItem("nickname")})
+        //         // await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=-1`)
+        //     } else {
+        //         this.showErrorMessage("Log in to vote");
+        //     }
+        // },
         async goToComments() {
             console.log();
-            //TODO
             this.$router.push(`/r/${this.subreddit_name}/${this.id}`);
         },
     },
@@ -112,9 +131,20 @@ export default {
         // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
         //const user = await axios.get(`http://localhost:3000/user/id=${this.user_id}`)
         //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
+        //this.getAll();
+
+        
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         this.counter = this.post_votes;
-        //this.getAll();
+
+        // this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
+        // this.votes = this.post_votes;
+        // socket.on("getVotes",(data) => {
+        //     if(this.id === data.post_id) {
+        //         this.votes = data.votes;
+        //         this.showErrorMessage(data.error_message);
+        //     }
+        // });
     }
 }
 </script>

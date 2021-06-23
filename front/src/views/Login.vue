@@ -55,24 +55,30 @@ export default {
                 this.errorMessage.isVisible = false;
             }, 6000);
         },
-        login() {
-            axios.post(`${ngrok}/auth/login`, {
+        async login() {
+            await axios.post(`${ngrok}/auth/login`, {
                 username: this.nickname, 
                 password: this.password,
             }).then(async (res) => {
                 console.log(res);
                 sessionStorage.setItem("nickname", this.nickname);
                 sessionStorage.setItem("isLogged","true");
-                await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`)
-                .then((data) => {
-                    console.log(data);
-                    sessionStorage.setItem("isModerator","true");
-                }).catch((error) => console.log(error))
-                console.log("LOGIN");
-                this.$router.push("/");
+                
+                
             }).catch((error) => {
                 console.log(error);
                 this.showErrorMessage("Wrong Credentials");
+            });
+            await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`)
+            .then((data) => {
+                console.log(data);
+                sessionStorage.setItem("isModerator","true");
+                console.log("LOGIN");
+                this.$router.push("/");
+            }).catch((error) => {
+            console.log("LOGIN");
+            this.$router.push("/");
+            console.log(error);
             });
         },
         //async getAll() {
