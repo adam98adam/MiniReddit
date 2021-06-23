@@ -59,6 +59,8 @@ app.use(passport.session());
 const LocalStrategy = require("passport-local").Strategy;
 // const { use } = require("./routes/auth");
 const client = require("./exports/postgres");
+const { eventListeners } = require("@popperjs/core");
+const { get } = require("./routes/auth");
 
 const REDDIT_USER = {
     id: 0,
@@ -325,6 +327,74 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
     });
 
+
+    // postLikes
+    socket.on("postLikes", async(data) => {
+        const user_id = await pg.query(`SELECT id FROM reddit_user where nickname = '${data.nickname}'`)
+        const postVote = await pg.query(
+            "select * from post_vote where post_id = $1 and user_id = $2;",
+            [data.post_id,user_id.rows[0].id]
+        );
+
+        if(postVote.rows[0]){
+            if(postVote.rows[0].vote === data.vote) {
+                const post = await pg.query(
+                    "delete from post_vote where post_id = $1 and user_id = $2",
+                    [data.post_id,user_id.rows[0].id]
+                );
+                //const posts_subreddit = await  pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id where s.name = '${data.subreddit_name}';`)
+                //const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+                //socket.broadcast.emit('getSubredditData', {posts: all_posts,post_id: data.post_id,error_message: `Vote has been revoked by user : ${data.nickname}`});
+                //io.to(socket.id).emit('getSubredditData', {post_id: data.post_id,error_message: `Vote has been revoked by you`} );
+                //socket.broadcast.emit('allPosts', {post_id: data.post_id,error_message: `Vote has been revoked by user : ${data.nickname}`});
+                //io.to(socket.id).emit('allPosts', {post_id: data.post_id,error_message: `Vote has been revoked by you`} );
+                //io.sockets.emit('getSubredditData', posts_subreddit);
+                const getPost = await pg.query( `select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id}`)
+                io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been revoked by ${data.nickname}`});
+                io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been revoked by you`} );
+             
+           
+            } else {
+                await pg.query(
+                    "update post_vote set vote = $1 where post_id = $2 and user_id = $3;",
+                    [data.vote, data.post_id,user_id.rows[0].id]
+                );
+
+                //const posts_subreddit = await  pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id where s.name = '${data.subreddit_name}';`)
+                //const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+               // socket.broadcast.emit('getSubredditData', {post_id: data.post_id,error_message: `Vote has been changed by user : ${data.nickname}`});
+               // io.to(socket.id).emit('getSubredditData', {post_id: data.post_id,error_message: `Vote has been changed by you`} );
+                //socket.broadcast.emit('allPosts', {post_id: data.post_id,error_message: `Vote has been changed by changed : ${data.nickname}`});
+               // io.to(socket.id).emit('allPosts', {post_id: data.post_id,error_message: `Vote has been changed by you`} );
+               //io.sockets.emit('getSubredditData', posts_subreddit);
+               const getPost = await pg.query( `select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id}`)
+               io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been changed by ${data.nickname}`});
+               io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been changed by you`} );
+            
+            }
+        } else {
+            const postVoteId = await pg.query(
+                `insert into post_vote(vote, user_id, post_id) values($1, $2, $3) RETURNING ID;`,
+                [data.vote, user_id.rows[0].id, data.post_id])
+
+                const getPost = await pg.query( `select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id}`)
+                io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been added by ${data.nickname}`});
+                io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been added by you`} );
+
+                //const posts_subreddit = await  pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id where s.name = '${data.subreddit_name}';`)
+                //const all_posts = await pg.query( `select p.*,s.name,r.nickname,(select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = p.id) from post p inner join subreddit s on p.subreddit_id=s.id inner join reddit_user r on p.user_id=r.id;`)
+               // socket.broadcast.emit('getSubredditData', {post_id: data.post_id,error_message: `Vote has been changed by user : ${data.nickname}`});
+              //  io.to(socket.id).emit('getSubredditData', {post_id: data.post_id,error_message: `Vote has been changed by you`} );
+              //  socket.broadcast.emit('allPosts', {post_id: data.post_id,error_message: `Vote has been changed by changed : ${data.nickname}`});
+               // io.to(socket.id).emit('allPosts', {post_id: data.post_id,error_message: `Vote has been changed by you`} );
+               //io.sockets.emit('getSubredditData', posts_subreddit);
+               //io.sockets.emit('getVotes', all_posts);
+                
+        }
+    });
+
+    
+
     // socket.on("getModeratorData", async (data) => {
     //     let isModerator = false;
     //     // console.log(data.userNickname);
@@ -358,14 +428,14 @@ io.sockets.on("connect", (socket) => {
     //     io.sockets.emit('getSubreddits', subreddits);
     // });
 
-    /*
+    
     console.log(socket)
     const session = socket.request.session;
     console.log(`Socket.io: saving sid ${socket.id} in session ${session.id}`);
     session.socketId = socket.id;
     session.socketId = socket.id
-    console.log("JP 100% " + session.socketId);
+    console.log( session.socketId);
     console.log(session)
     session.save();
-    */
+    
 });

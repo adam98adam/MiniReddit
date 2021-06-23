@@ -38,10 +38,12 @@ export default {
     Sort,
     PostRouter,
   },
+ 
   methods: {
     async getAll() {
         socket.emit('getData')
     },
+
     isLogged() {
       return sessionStorage.getItem("isLogged");
       //return localStorage.getItem("isLogged");
@@ -89,21 +91,28 @@ export default {
         socket.on('allPosts', async (posts) => {
             // console.log('hello')
             console.log(posts.rows);
-            this.posts = posts.rows;
+            //this.posts.push('');
+           // var tempArray = [];
+           // tempArray = posts.rows
+            //this.posts
+            //this.postRows = posts.rows
+           //this.posts = posts.rows
+           this.posts = posts.rows
+              
         });
-        //console.log(posts)
-        //this.posts = data.rows
-        //console.log(this.posts)
-        //this.getAll();
-        //socket.on('getData',async (posts) => {
-        //console.log(posts.rows)
-        //this.posts = posts.rows
-        //this.posts.sort((a,b)=>a.id-b.id)
-        //this.posts = this.posts.filter(x => x.checked === false)
-        //this.posts.forEach(element => {
-        // console.log(element)                 
-        //});
-        //})
+        /*
+           socket.on('giveVote', async (posts) => {
+            // console.log('hello')
+            console.log(posts.rows);
+            //this.posts.push('');
+           // var tempArray = [];
+           // tempArray = posts.rows
+            //this.posts
+            //this.postRows = posts.rows
+           this.posts = posts.rows
+              
+        });
+        */
     }
 }
 </script>

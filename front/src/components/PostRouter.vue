@@ -6,11 +6,11 @@
         <div id="subreddit">r/{{this.subreddit_name}}</div>
         <div id="nickname">Posted by u/{{this.user_nickname}}</div>
         <div id="creation-date">
-            <button @click="deletePost()" v-if="isModerator()" id="deleteButton">Delete</button>
+            <button @click="deletePost()" v-if="isModerator() || postOwner()" id="deleteButton">Delete</button>
             <br/>
             {{this.time}}
         </div>
-        <div id="counter">{{this.counter}}</div>
+        <div id="votes">{{this.votes}}</div>
         <div id="title">Title : {{this.title}}</div>
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
@@ -36,11 +36,10 @@ export default {
     data() {
         {
             return {
-                //subreddit_name:'',
-                //nickname:'',
+                //votes: this.post_votes,
                 video_url_local: this.video_url,
                 time:'',
-                counter:0,
+                votes:this.post_votes,
                 errorMessage: {
                     isVisible: false,
                     content:""
@@ -57,6 +56,14 @@ export default {
         },
         deletePost() {
             socket.emit("deletePost", {postId: this.id,subreddit_name: this.subreddit_name,nickname : sessionStorage.getItem("nickname")});
+        },
+        postOwner(){
+            if(sessionStorage.getItem("nickname") !== null) {
+                if(sessionStorage.getItem("nickname") === this.user_nickname)
+                    return true;
+            } else{
+                return false;
+            }
         },
   //      async getAll() {
 //
@@ -79,7 +86,9 @@ export default {
         async giveLike() {
             if(sessionStorage.getItem("isLogged")) {
                 console.log("giveLike")
-                await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
+                //socket post like
+                socket.emit("postLikes",{post_id: this.id, vote: 1, subreddit_name: this.subreddit_name, nickname: sessionStorage.getItem("nickname")})
+                //await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
             } else {
                 this.showErrorMessage("Log in to vote");
             }
@@ -87,6 +96,9 @@ export default {
         async giveDislike() {
             if(sessionStorage.getItem("isLogged")) {
                 console.log("giveDislake")
+                //socket post dislike
+                socket.emit("postLikes",{post_id: this.id, vote: -1, subreddit_name: this.subreddit_name ,nickname: sessionStorage.getItem("nickname")})
+                
                 await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=-1`)
             } else {
                 this.showErrorMessage("Log in to vote");
@@ -103,8 +115,13 @@ export default {
         //const user = await axios.get(`http://localhost:3000/user/id=${this.user_id}`)
         //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
-        this.counter = this.post_votes;
-        //this.getAll();
+        this.votes = this.post_votes;
+        socket.on("getVotes",(data) => {
+            if(this.id === data.post_id) {
+                this.votes = data.votes;
+                this.showErrorMessage(data.error_message);
+            }
+        })
     }
 }
 </script>
@@ -123,7 +140,7 @@ export default {
     grid-template-rows: repeat(8,1fr);
     grid-template-areas: "up-arrow subreddit nickname creation-date"
                         "ac as title xd"
-                        "counter content content content"
+                        "votes content content content"
                         "error content content content"
                         "bottom-arrow content content content"
                         "image image video video"
@@ -174,8 +191,8 @@ export default {
     text-align: center;
 }
 
-.grid-container > #counter {
-    grid-area: counter;
+.grid-container > #votes {
+    grid-area: votes;
     display:flex;
     justify-content: center;
     align-items: center;

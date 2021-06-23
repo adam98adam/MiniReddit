@@ -58,7 +58,7 @@ export default {
         }, 6000);
       },
       async login() {
-          await axios.post(`${ngrok}/auth/login`, {
+          axios.post(`${ngrok}/auth/login`, {
               username: this.nickname, 
               password: this.password
           }).then(async (res) => {
@@ -75,29 +75,7 @@ export default {
               this.showErrorMessage("Wrong Credentials")
           })
       }
-    //async getAll() {
-    //    socket.emit('getData')
-   // },
-  //  async dis() {
-   //     socket.disconnect();
-    //}
-  },
-  computed: {
-
-  },
-  /*
-  created(){ 
-        this.getAll();
-            socket.on('getData',async (posts) => {
-                console.log(posts.rows)
-                this.posts = posts.rows
-                this.posts.sort((a,b)=>a.id-b.id)
-                this.posts = this.posts.filter(x => x.checked === false)
-                console.log(this.posts)
-            })
-        }
-}
-    */
+  }, 
 }
 </script>
 
