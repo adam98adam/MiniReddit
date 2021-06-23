@@ -79,37 +79,24 @@ router.get('/subreddit_id=:subreddit_id', async (req, res) => {
 //Do przejrzenia
 router.post("/", upload.single("file"), async (req, res) => {
     // console.log("req.file: ", req.file);
-    const image = "http://localhost:3000/" + req.file.path;
     const time = await client.query("SELECT date_trunc('second', now()::timestamp) as time;");
     const subreddit_id = await client.query(`select id from subreddit where name = '${req.body.subredditName}';`);
-    // console.log("req.user: ", req.user);
-    // console.log("subreddit_id.rows[0]: ", subreddit_id.rows[0]);
+    
+    let image = null;
+    let video_url = null;
+    if (typeof req.file !== 'undefined' && req.file.path !== '') {
+        image = "http://localhost:3000/" + req.file.path;
+    }
+    if (typeof req.body !== 'undefined' && req.body.video_url !== '') {
+        video_url = req.body.video_url;
+    }
 
-    const postId = await client.query(
+    await client.query(
         `insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
-        [req.body.title, req.body.content, image, req.body.video_url, time.rows[0].time, subreddit_id.rows[0].id, req.user.id] //subreddit_id.rows[0].id
+        [req.body.title, req.body.content, image, video_url, time.rows[0].time, subreddit_id.rows[0].id, req.user.id] //subreddit_id.rows[0].id
     );
 
     return res.status(200).json("update");
-    
-    //subreddit_id.rows[0]
-
-    //console.log(req.file)
-    //console.log("hello123981")
-    //console.log(req.body.title)
-    //res.status(200).json("cos")
-    /*
-    const postId = await client.query(
-        `insert into post(title, content, image_path, video_url, creation_date, subreddit_id, user_id) values($1, $2, $3, $4, $5, $6, $7) RETURNING ID;`,
-        [req.body.Title, req.body.Content, req.body.Image_path, req.body.Video_url, req.body.Creation_date, req.body.Subreddit_id, req.body.User_id]
-    );
-
-    const post = await client.query(
-        `select * from post where id=${postId.rows[0].id};`
-    );
-
-    return res.send(post.rows[0]);
-    */
 });
 
 //Do przejrzenia

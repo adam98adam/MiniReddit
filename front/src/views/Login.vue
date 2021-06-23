@@ -31,62 +31,60 @@ import axios from '../services/axios'
 import ngrok from '../ngrok'
 
 export default {
-  name: 'Login',
-  data() {
-    {
-      return {
-        nickname:"",
-        password:"",
-        errorMessage: {
-            isVisible: false,
-            content:""
+    name: 'Login',
+    data() {
+        {
+            return {
+                nickname: "",
+                password: "",
+                errorMessage: {
+                    isVisible: false,
+                    content: "",
+                },
+            }
         }
-    
-      }
-    
-    } 
-  },
-  components: {
-    HomeButton
-  },
-  methods: {
-      showErrorMessage(message) {
-        this.errorMessage.content = message;
-        this.errorMessage.isVisible = true;
-        setTimeout(() => {
-            this.errorMessage.isVisible = false;
-        }, 6000);
-      },
-      async login() {
-          await axios.post(`${ngrok}/auth/login`, {
-              username: this.nickname, 
-              password: this.password
-          }).then(async (res) => {
-              console.log(res);
-              sessionStorage.setItem("nickname", this.nickname);
-              sessionStorage.setItem("isLogged","true")
-              await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`).then((data) => {
-                  console.log(data)
-                  sessionStorage.setItem("isModerator","true")
-              }).catch((error) => console.log(error))
-              this.$router.push("/");
-          }).catch((error) => {
-              console.log(error)
-              this.showErrorMessage("Wrong Credentials")
-          })
-      }
-    //async getAll() {
-    //    socket.emit('getData')
-   // },
-  //  async dis() {
-   //     socket.disconnect();
-    //}
-  },
-  computed: {
-
-  },
-  /*
-  created(){ 
+    },
+    components: {
+        HomeButton
+    },
+    methods: {
+        showErrorMessage(message) {
+            this.errorMessage.content = message;
+            this.errorMessage.isVisible = true;
+            setTimeout(() => {
+                this.errorMessage.isVisible = false;
+            }, 6000);
+        },
+        login() {
+            axios.post(`${ngrok}/auth/login`, {
+                username: this.nickname, 
+                password: this.password,
+            }).then(async (res) => {
+                console.log(res);
+                sessionStorage.setItem("nickname", this.nickname);
+                sessionStorage.setItem("isLogged","true");
+                await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`)
+                .then((data) => {
+                    console.log(data);
+                    sessionStorage.setItem("isModerator","true");
+                }).catch((error) => console.log(error))
+                console.log("LOGIN");
+                this.$router.push("/");
+            }).catch((error) => {
+                console.log(error);
+                this.showErrorMessage("Wrong Credentials");
+            });
+        },
+        //async getAll() {
+        //    socket.emit('getData')
+        //},
+        //async dis() {
+        // socket.disconnect();
+        //}
+    },
+    computed: {},
+    /*
+    created(){ 
         this.getAll();
             socket.on('getData',async (posts) => {
                 console.log(posts.rows)
@@ -96,7 +94,7 @@ export default {
                 console.log(this.posts)
             })
         }
-}
+    }
     */
 }
 </script>

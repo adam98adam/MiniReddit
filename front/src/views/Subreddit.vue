@@ -10,7 +10,7 @@
                 </div>
                 <button v-if="isSubredditUser" @click="expand" class="btn createPost">{{addPostText}}</button>
                 <div v-if="showAddPost">
-                    <AddPost :name="this.name"/>
+                    <AddPost :name="this.name" :posts="this.posts"/>
                 </div>
             </div>
         </div>

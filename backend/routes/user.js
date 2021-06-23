@@ -16,18 +16,16 @@ router.get('/', async (req, res) => {
 
 router.get('/isModerator/nickname=:nickname', async (req, res) => {
     console.log(req.params.nickname)
-   const isModerator =  await client.query(`select * from reddit_user r inner join user_role u on r.id = u.user_id where  u.role_id = 1 and r.nickname = '${req.params.nickname}'`)
+    const isModerator =  await client.query(
+        `select * from reddit_user r inner join user_role u on r.id = u.user_id 
+        where u.role_id = 1 and r.nickname = '${req.params.nickname}';`
+    );
 
-   if(isModerator.rows[0])
-        return res.send("Moderator")
+    if(isModerator.rows[0])
+        return res.send("Moderator");
     else
-        return res.status(404).send("Not Moderator")
+        return res.status(404).send("Not Moderator");
 });
-
-
-
-
-
 
 router.get('/id=:id', async (req, res) => {
     const reddit_user = await client.query(

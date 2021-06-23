@@ -45,28 +45,28 @@ export default {
             e.preventDefault()
             
             if (!this.subName) {
-                this.showErrorMessage('Please add subreddit name')
-                //alert('Please add subreddit name')
+                this.showErrorMessage('Please add subreddit name');
+                //alert('Please add subreddit name');
                 return
             }
 
             if (!this.subDescription) {
-                this.showErrorMessage('Please add subreddit description')
-                //alert('Please add subreddit description')
+                this.showErrorMessage('Please add subreddit description');
+                //alert('Please add subreddit description');
                 return
             }
 
-            let isRepeated = false
+            let isRepeated = false;
             this.subreddits.forEach(el => {
-                if(el.name === this.subName) {
+                if (el.name === this.subName) {
                     isRepeated = true;
+                    return
                 }
-
             });
 
             if (isRepeated === true) {
-                this.showErrorMessage('Subreddit already exists')
-                //alert('Subreddit already exists')
+                this.showErrorMessage('Subreddit already exists');
+                //alert('Subreddit already exists');
                 return
             }
 

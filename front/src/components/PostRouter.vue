@@ -15,7 +15,7 @@
         <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
         <div id="content">{{this.content}}</div>
         <div id="video"><iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe></div>
-        <div id="image"><img class="img" v-if="this.image_path!== null"   :src="this.image_path" title="description"/></div>
+        <div id="image"><img class="img" v-if="this.image_path!== null" :src="getImagePath()" title="description"/></div>
         <button v-if="this.single_post" @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
@@ -49,6 +49,12 @@ export default {
         }
     },
     methods: {
+        getImagePath() {
+            return this.image_path.replace(
+                "http://localhost:3000",
+                ngrok,
+            );
+        },
         isLogged() {
             return sessionStorage.getItem("isLogged");
         },

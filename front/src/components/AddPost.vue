@@ -32,7 +32,7 @@
 
 export default {
     name: 'AddPost',
-    props:['name'],
+    props:['name', 'posts'],
     data() {
         return {
             subredditName: this.$route.params.name,
@@ -58,20 +58,28 @@ export default {
             e.preventDefault()
             if (!this.title) {
                 this.showErrorMessage('Please add post title');
-                //alert('Please add post title')
+                //alert('Please add post title');
                 return
             }
             if (!this.content) {
                 this.showErrorMessage('Please add post content');
-                //alert('Please add post content')
+                //alert('Please add post content');
                 return
             }
 
-            if(this.image_path === '')
-                this.image_path = null
+            let isRepeated = false;
+            this.posts.forEach(el => {
+                if (el.title === this.title) {
+                    isRepeated = true;
+                    return
+                }
+            });
 
-            if(this.video_url === '')
-                this.video_url = null    
+            if (isRepeated === true) {
+                this.showErrorMessage('Post with this title already exists');
+                //alert('Post with this title already exists');
+                return
+            }
 
             const newPost = {
                 subredditName: this.$route.params.name,
@@ -83,7 +91,7 @@ export default {
                 nickname: sessionStorage.getItem("nickname")
             }
 
-            console.log("??????? ", newPost.image_path);
+            // console.log("??????? ", newPost.image_path);
             const formdata = new FormData()
             formdata.append("subredditName",newPost.subredditName)
             formdata.append("title",newPost.title)

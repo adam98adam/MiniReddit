@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import axios from '../services/axios'
+import ngrok from '../ngrok'
+
 export default {
   name: 'Navbar',
   data() {
@@ -38,7 +41,10 @@ export default {
       login() {
           this.$router.push("/login");
       },
-      logout() {
+      async logout() {
+           await axios.post(`${ngrok}/auth/logout`)
+           .then((data) => console.log(data))
+           .catch((err) => console.log(err));
            sessionStorage.removeItem("nickname");
            sessionStorage.removeItem("isLogged");
            sessionStorage.removeItem("isModerator");
