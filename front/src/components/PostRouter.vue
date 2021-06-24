@@ -25,10 +25,9 @@
 </template>
 
 <script>
-//import axios from '../services/axios'
 import socket from '../socketConnection'
 import moment from 'moment'
-import axios from 'axios';
+import axios from 'axios'
 import ngrok from '../ngrok'
 
 export default {
@@ -66,7 +65,6 @@ export default {
         },
         postOwner() {
             if (sessionStorage.getItem("nickname") !== null && sessionStorage.getItem("nickname") === this.user_nickname) {
-                // if (sessionStorage.getItem("nickname") === this.user_nickname)
                 return true;
             } else {
                 return false;

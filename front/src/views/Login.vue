@@ -5,11 +5,11 @@
                 <h2>Login</h2>
             </div>
             <div class="form-group">
-                <label  for="nickname">Nickname</label><br>
+                <label  for="nickname"><a style="color:whitesmoke;">Nickname</a></label><br>
                 <input  v-model="nickname" id="nickname" type="text" class="form-control">
             </div>
             <div class="form-group">
-                <label  for="password">Password</label><br>
+                <label  for="password"><a style="color:whitesmoke;">Password</a></label><br>
                 <input v-model="password" id="password" type="password" class="form-control">
             </div>
             <div class="form-group">
@@ -20,7 +20,7 @@
                 {{ errorMessage.content }}
             </div> 
             <hr>
-            <p>Don't have an account? <button @click="$router.push('/register')" id="button" type="button"  class="btn btn-danger">Register</button></p>
+            <a style="color:whitesmoke;">Don't have an account? <button @click="$router.push('/register')" id="button" type="button"  class="btn btn-danger">Register</button></a>
         </form>
 	</div>
 </template>
@@ -63,45 +63,24 @@ export default {
                 console.log(res);
                 sessionStorage.setItem("nickname", this.nickname);
                 sessionStorage.setItem("isLogged","true");
-                
-                
+                await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`)
+                .then((data) => {
+                    console.log(data);
+                    sessionStorage.setItem("isModerator","true");
+                    console.log("LOGIN");
+                    this.$router.push("/");
+                }).catch((error) => {
+                console.log("LOGIN");
+                this.$router.push("/");
+                console.log(error);
+                });
             }).catch((error) => {
                 console.log(error);
                 this.showErrorMessage("Wrong Credentials");
             });
-            await axios.get(`${ngrok}/user/isModerator/nickname=${this.nickname}`)
-            .then((data) => {
-                console.log(data);
-                sessionStorage.setItem("isModerator","true");
-                console.log("LOGIN");
-                this.$router.push("/");
-            }).catch((error) => {
-            console.log("LOGIN");
-            this.$router.push("/");
-            console.log(error);
-            });
         },
-        //async getAll() {
-        //    socket.emit('getData')
-        //},
-        //async dis() {
-        // socket.disconnect();
-        //}
     },
     computed: {},
-    /*
-    created(){ 
-        this.getAll();
-            socket.on('getData',async (posts) => {
-                console.log(posts.rows)
-                this.posts = posts.rows
-                this.posts.sort((a,b)=>a.id-b.id)
-                this.posts = this.posts.filter(x => x.checked === false)
-                console.log(this.posts)
-            })
-        }
-    }
-    */
 }
 </script>
 
@@ -109,17 +88,25 @@ export default {
 form {
 	margin: 0px 10px;
 }
+
 h2 {
-	color: rgb(241, 8, 66);
+	color: whitesmoke;
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
+
 .container {
-	background-color: greenyellow;
-	border: 3px solid black;
-    margin-top: 20px;
+	margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem;
+    border: 3px solid black;
+    border-radius: 1rem;
+    background-color: #247022;
 	max-width: 400px;
 }
+
 .divider {
 	text-align: center;
 	margin-top: 20px;
@@ -129,12 +116,15 @@ h2 {
 		width: 35%;
 	}
 }
+
 .left {
 	float: left;
 }
+
 .right {
 	float: right;
 }
+
 #error-message {
 	text-align: center;
 	color: red;

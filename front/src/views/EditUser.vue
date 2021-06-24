@@ -5,15 +5,15 @@
 				<h2>Change Password</h2>
 			</div>
 			<div class="form-group">
-				<label  for="nickname">Old Password</label><br>
+				<label  for="nickname"><a style="color:whitesmoke;">Old Password</a></label><br>
 				<input  v-model="oldPassword" id="oldPassword" type="password" class="form-control">
 			</div>
 			<div class="form-group">
-          <label  for="newPassword">New Password</label><br>
+          <label  for="newPassword"><a style="color:whitesmoke;">New Password</a></label><br>
           <input v-model="newPassword" id="newPassword" type="password" class="form-control">
 			</div>
       <div class="form-group">
-          <label  for="confirmPassword">Confirm Password</label><br>
+          <label  for="confirmPassword"><a style="color:whitesmoke;">Confirm Password</a></label><br>
           <input v-model="confirmPassword" id="confrimPassword" type="password" class="form-control">
 			</div>
       <div class="form-group">
@@ -62,57 +62,43 @@ export default {
       await axios.put(`${ngrok}/user`, {
           OldPassword: this.oldPassword,
           NewPassword: this.newPassword,
-          ConfirmPassword:this.confirmPassword
+          ConfirmPassword:this.confirmPassword,
       }).then((res) => {
           console.log(res);
           this.$router.push("/");
-          //document.cookie = "isLogged=true"
-          //sessionStorage.setItem("isLogged", "true")
-          //localStorage.setItem("isLogged", "true")   
       }).catch((error) => {
           console.log(error)
           this.showErrorMessage(error.response.data)
       })
-    }
-    //async getAll() {
-    //    socket.emit('getData')
-   // },
-  //  async dis() {
-   //     socket.disconnect();
-    //}
+    },
   },
   computed: {},
-  /*
-  created(){ 
-        this.getAll();
-            socket.on('getData',async (posts) => {
-                console.log(posts.rows)
-                this.posts = posts.rows
-                this.posts.sort((a,b)=>a.id-b.id)
-                this.posts = this.posts.filter(x => x.checked === false)
-                console.log(this.posts)
-            })
-        }
-}
-    */
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 form {
 	margin: 0px 10px;
 }
+
 h2 {
-	color: rgb(241, 8, 66);
+	color: whitesmoke;
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
+
 .container {
-	background-color: greenyellow;
-	border: 3px solid black;
-    margin-top: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3rem;
+  border: 3px solid black;
+  border-radius: 1rem;
+  background-color: #247022;
 	max-width: 400px;
 }
+
 .divider {
 	text-align: center;
 	margin-top: 20px;
@@ -122,12 +108,15 @@ h2 {
 		width: 35%;
 	}
 }
+
 .left {
 	float: left;
 }
+
 .right {
 	float: right;
 }
+
 #error-message {
 	text-align: center;
 	color: red;

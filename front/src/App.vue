@@ -27,7 +27,6 @@ html {
 
 h1 {
     color: whitesmoke;
-    // rgba(27, 25, 25, 1)
 }
 
 a {
