@@ -4,12 +4,12 @@
         <div id="hr"><hr></div>
         <div id="description"><a style="color:whitesmoke;">{{this.description}}</a></div>
         <div id="change" v-if="isModerator()">
-            <button @click="expand" class="btn btn-dark">{{addChangeText}}</button>
+            <button @click="expand" class="btn"><a style="color:whitesmoke;">{{addChangeText}}</a></button>
             <div v-if="showChangeSubreddit">
                 <ChangeSubreddit :id="this.id"/>
             </div>
         </div>
-        <button @click="goToSubreddit()" id="button" type="button" class="btn btn-dark"><a style="color:whitesmoke;">See more content</a></button>
+        <button @click="goToSubreddit()" id="button" type="button" class="btn"><a style="color:whitesmoke;">See more content</a></button>
     </div>
 </template>
 
@@ -106,6 +106,7 @@ export default {
     grid-area: change;
     text-align: center;
     display:flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
