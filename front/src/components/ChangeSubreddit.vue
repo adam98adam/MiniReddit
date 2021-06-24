@@ -56,25 +56,10 @@ export default {
                 return
             }
 
-            // let isRepeated = false
-            // this.subreddits.forEach(el => {
-            //     if(el.name === this.changeName) {
-            //         isRepeated = true;
-            //     }
-            // });
-
-            // if (isRepeated === true) {
-            //     this.showErrorMessage('Subreddit already exists')
-            //     //alert('Subreddit already exists')
-            //     return
-            // }
-
             const changeSubreddit = {
                 id: this.id,
                 name: this.changeName,
                 description: this.changeDescription,
-                // nickname: sessionStorage.getItem("nickname"),
-                //nickname: localStorage.getItem("nickname"),
             }
 
             socket.emit('changeSubreddit', changeSubreddit);

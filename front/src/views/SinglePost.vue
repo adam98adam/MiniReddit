@@ -6,15 +6,15 @@
         </div>
         <div v-if="checkPost()">
             <PostRouter  v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="false"/>
-            <div v-if="checkCommets()" class="comments">
-                <CommentRouter v-for="comment in comments" :key="comment.id" :id="comment.id" :content="comment.content" :user_id="comment.user_id" :subreddit_name="this.$route.params.name" :post_id="this.$route.params.id" :nickname="comment.nickname"/>
-            </div>
             <div v-if="!checkCommets()" class="err">
                 <h2>{{this.error_message}}</h2>
             </div>
             <button v-if="isLogged()" @click="expand" class="btn createComment">{{addCommentText}}</button>
             <div v-if="showAddComment">
                 <AddComment :post_id="posts[0].id"/>
+            </div>
+            <div v-if="checkCommets()" class="comments">
+                <CommentRouter v-for="comment in comments" :key="comment.id" :id="comment.id" :content="comment.content" :user_id="comment.user_id" :subreddit_name="this.$route.params.name" :post_id="this.$route.params.id" :nickname="comment.nickname"/>
             </div>
         </div>
         <div v-if="!checkPost()" class="err">

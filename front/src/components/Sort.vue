@@ -1,6 +1,6 @@
 <template>
-    <div class="main">
-       <button @click="$emit('sortPosts',sortPosts())" type="button" class="btn btn-danger">Sort by {{order}}</button>
+    <div class="sort">
+       <button @click="$emit('sortPosts', sortPosts())" type="button" class="btn"><a style="color:#fae8e8;">Sort by {{order}}</a></button>
     </div>
 </template>
 
@@ -29,8 +29,12 @@ export default {
 }
 </script>
 
-<style>
-.main{
+<style scoped>
+.sort {
     margin-top: 2rem;
+}
+
+.btn {
+    background-color: #121212;
 }
 </style>

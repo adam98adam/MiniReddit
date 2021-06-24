@@ -9,7 +9,8 @@
             </div>
         </div>
         <div class="subreddits">
-            <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id" :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
+            <SubredditRouter v-for="subreddit in subreddits" :key="subreddit.id"
+            :id="subreddit.id" :name="subreddit.name" :description="subreddit.description"/>
         </div>
     </div>
 </template>
@@ -19,7 +20,6 @@ import Navbar from '../components/Navbar.vue'
 import SubredditRouter from '../components/SubredditRouter'
 import AddSubreddit from '../components/AddSubreddit'
 import socket from '../socketConnection'
-//import axios from '../services/axios'
 
 export default {
     name: 'Subreddits',
@@ -45,24 +45,18 @@ export default {
         },
         isLogged() {
             return sessionStorage.getItem("isLogged");
-            //return localStorage.getItem("isLogged");
         },
-        // getHome() {
-        //     this.$router.push("/");
-        // },
         expand() {
             this.showAddSubreddit = !this.showAddSubreddit;
             if (this.showAddSubreddit) {
                 this.addSubredditText = "Cancel";
-            }
-            else {
+            } else {
                 this.addSubredditText = "Create Subreddit";
             }
         },
     },
     computed: {},
-    async created() { 
-        //console.log(await axios.get("http://localhost:3000/user/"));
+    async created() {
         this.getAll();
         socket.on('getSubreddits', async (subreddits) => {
             console.log(subreddits.rows);

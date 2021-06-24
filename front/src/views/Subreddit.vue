@@ -14,11 +14,13 @@
                 </div>
             </div>
         </div>
-        <div id="error-message" v-if="errorMessage.isVisible" >
+        <div id="error-message" v-if="errorMessage.isVisible">
             {{ errorMessage.content }}
         </div>
         <div class="posts">
-            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="true"/>
+            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content"
+            :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date"
+            :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="true"/>
         </div>
     </div>
 </template>
@@ -28,21 +30,20 @@ import Navbar from '../components/Navbar.vue'
 import PostRouter from '../components/PostRouter'
 import AddPost from '../components/AddPost'
 import socket from '../socketConnection'
-//import axios from '../services/axios'
 
 export default {
     name: 'Subreddit',
     data() {
         {
             return {
-                name:this.$route.params.name,
-                posts:[],
+                name: this.$route.params.name,
+                posts: [],
                 showAddPost: false,
                 addPostText: "Create Post",
                 isSubredditUser: false,
                 errorMessage: {
                     isVisible: false,
-                    content:""
+                    content: ""
                 }
             }
         }
@@ -54,7 +55,6 @@ export default {
     },
     methods: {
         async getAll() {
-            // console.log(this.$route.params.name);
             socket.emit('getSubredditData', this.$route.params.name);
             if (this.isLogged())
                 socket.emit(
@@ -64,20 +64,16 @@ export default {
                         subredditName: this.$route.params.name,
                     }
                 );
-            // if (sessionStorage.getItem("nickname") != null)
-            //     this.isSubredditUser = true;
         },
         isLogged() {
             return sessionStorage.getItem("isLogged");
         },
         expand() {
             this.showAddPost = !this.showAddPost;
-            if (this.showAddPost) {
+            if (this.showAddPost)
                 this.addPostText = "Cancel";
-            }
-            else {
+            else
                 this.addPostText = "Create Post";
-            }
         },
         joinSubreddit() {
             socket.emit(
@@ -96,19 +92,16 @@ export default {
             }, 6000);
         },
     },
-    async created() { 
-        //console.log(await axios.get("http://localhost:3000/user/"));
+    async created() {
         console.log(this.$route.params.name);
         this.getAll();
         socket.on('getSubredditData', async (posts) => {
-            if(posts === 0)
-                this.showErrorMessage('Post title already exists in this subreddit')
-            else {
-                this.posts = posts.rows
-            }
+            if (posts === 0)
+                this.showErrorMessage('Post title already exists in this subreddit');
+            else
+                this.posts = posts.rows;
         });
         socket.on('getSubredditUser', async (response) => {
-            // console.log(response);
             this.isSubredditUser = response;
         });
         socket.on('activated', async () => {

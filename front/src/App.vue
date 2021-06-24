@@ -19,7 +19,21 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+html {
+    background: rgb(5,55,23);
+    background: linear-gradient(90deg, rgba(5,55,23,1) 0%, rgba(6,69,25,1) 50%, rgba(19,140,27,1) 100%);
+}
+
+h1 {
+    color: whitesmoke;
+    // rgba(27, 25, 25, 1)
+}
+
+a {
+    color: whitesmoke;
+}
+
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -27,5 +41,7 @@ export default {
     text-align: center;
     color: #2c3e50;
     margin-top: 0px;
+    background: rgb(5,55,23);
+    background: linear-gradient(90deg, rgba(5,55,23,1) 0%, rgba(6,69,25,1) 50%, rgba(19,140,27,1) 100%);
 }
 </style>

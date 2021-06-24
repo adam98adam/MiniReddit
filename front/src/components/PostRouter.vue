@@ -3,21 +3,21 @@
         <div id="up-arrow">
             <a @click="giveLike()"><i class="fas fa-arrow-up"></i></a>
         </div>
-        <div id="subreddit">r/{{this.subreddit_name}}</div>
-        <div id="nickname">Posted by u/{{this.user_nickname}}</div>
+        <div id="subreddit"><a style="color:whitesmoke;">r/{{this.subreddit_name}}</a></div>
+        <div id="nickname"><a style="color:whitesmoke;">Posted by u/{{this.user_nickname}}</a></div>
         <div id="creation-date">
-            <button @click="deletePost()" v-if="isModerator() || postOwner()" id="deleteButton">Delete</button>
+            <button @click="deletePost()" v-if="isModerator() || postOwner()" id="deleteButton" class="btn btn-dark"><a style="color:whitesmoke;">Delete</a></button>
             <br/>
-            {{this.time}}
+            <a style="color:whitesmoke;">{{this.time}}</a>
         </div>
-        <div id="counter">{{this.counter}}</div>
+        <div id="counter"><a style="color:whitesmoke;">{{this.counter}}</a></div>
         <!-- <div id="counter">{{this.votes}}</div> -->
-        <div id="title">Title : {{this.title}}</div>
-        <div id="error" v-if="errorMessage.isVisible">{{ errorMessage.content }}</div>
-        <div id="content">{{this.content}}</div>
+        <div id="title"><a style="color:#000000;">Title : {{this.title}}</a></div>
+        <div id="error" v-if="errorMessage.isVisible"><a>{{ errorMessage.content }}</a></div>
+        <div id="content"><a style="color:whitesmoke;">{{this.content}}</a></div>
         <div id="video"><iframe v-if="this.video_url!== null" :src="changeLink()" title="description"></iframe></div>
         <div id="image"><img class="img" v-if="this.image_path!== null" :src="getImagePath()" title="description"/></div>
-        <button v-if="this.single_post" @click="goToComments()" id="comments" type="button" class="btn btn-dark">Comments</button>
+        <button v-if="this.single_post" @click="goToComments()" id="comments" type="button" class="btn btn-dark"><a style="color:whitesmoke;">Comments</a></button>
         <div id="bottom-arrow">
             <a @click="giveDislike()"><i class="fas fa-arrow-down"></i></a>
         </div>
@@ -128,12 +128,6 @@ export default {
         },
     },
     async created() {
-        // const subreddit = await axios.get(`http://localhost:3000/subreddit/id=${this.subreddit_id}`)
-        //const user = await axios.get(`http://localhost:3000/user/id=${this.user_id}`)
-        //const count = await axios.get(`http://localhost:3000/post_vote/counter/post_id=${this.id}`)
-        //this.getAll();
-
-        
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         this.counter = this.post_votes;
 
@@ -149,18 +143,20 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .grid-container {
-    box-shadow: 2px 2px 2px red;
+    width: 80%;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem;
     border: 3px solid black;
-    background-color: greenyellow;
+    border-radius: 1rem;
+    background-color: #247022;
     display:grid;
-    grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(8,1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr), 2fr, 1fr, 4fr, 4fr, 1fr;
     grid-template-areas: "up-arrow subreddit nickname creation-date"
                         "ac as title xd"
                         "counter content content content"
@@ -174,7 +170,7 @@ export default {
 
 .grid-container > #up-arrow {
     grid-area: up-arrow;
-      display:flex;
+    display:flex;
     justify-content: center;
     align-items: center;
 }
@@ -186,11 +182,17 @@ export default {
 .grid-container > #subreddit {
     grid-area: subreddit;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .grid-container > #nickname {
     grid-area: nickname;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .grid-container > #hr1 {

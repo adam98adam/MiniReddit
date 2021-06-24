@@ -1,15 +1,15 @@
 <template>
     <div class="sub">
-        <div id="name">{{this.name}}</div>
+        <div id="name"><h1 style="color:whitesmoke;">{{this.name}}</h1></div>
         <div id="hr"><hr></div>
-        <div id="description">{{this.description}}</div>
+        <div id="description"><a style="color:whitesmoke;">{{this.description}}</a></div>
         <div id="change" v-if="isModerator()">
             <button @click="expand" class="btn btn-dark">{{addChangeText}}</button>
             <div v-if="showChangeSubreddit">
                 <ChangeSubreddit :id="this.id"/>
             </div>
         </div>
-        <button @click="goToSubreddit()" id="button" type="button" class="btn btn-dark">See more content</button>
+        <button @click="goToSubreddit()" id="button" type="button" class="btn btn-dark"><a style="color:whitesmoke;">See more content</a></button>
     </div>
 </template>
 
@@ -52,18 +52,20 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .sub {
-    box-shadow: 2px 2px 2px red;
+    width: 60%;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem;
     border: 3px solid black;
-    background-color: greenyellow;
+    border-radius: 1rem;
+    background-color: #247022;
     display:grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: repeat(4,1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     grid-template-areas:"name name name"
                         "hr hr hr"
                         "description description description"
@@ -74,29 +76,44 @@ export default {
 .sub > #name {
     grid-area: name;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sub > #hr {
     grid-area: hr;
     text-align: center;
+    // display:flex;
+    // justify-content: center;
+    // align-items: center;
 }
 
 .sub > #description {
     grid-area: description;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sub > #button {
     grid-area: button;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sub > #change {
     grid-area: change;
     text-align: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 hr {
-    background-color: red;
+    background-color: #4f17b0;
 }
 </style>

@@ -1,2 +1,2 @@
-const ngrok = "https://db0ef0cfc1d6.eu.ngrok.io";
+const ngrok = "https://393cb3d8987f.eu.ngrok.io";
 export default ngrok;

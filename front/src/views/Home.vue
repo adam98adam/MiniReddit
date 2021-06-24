@@ -2,13 +2,15 @@
     <div>
         <Navbar/>
         <div class="header">
-            <h1>Home - all posts</h1>
+            <h1>Reddit Clone Homepage</h1>
         </div>
         <Search @searchPosts="searchPosts"/>
         <Sort @sortPosts="sortPosts"/>
         <div class="posts">
-          <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content" :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date" :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="true"/>
-      </div>
+            <PostRouter v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content"
+            :image_path="post.image_path" :video_url="post.video_url" :creation_date="post.creation_date"
+            :subreddit_name="post.name" :user_nickname="post.nickname" :post_votes="post.votes" :single_post="true"/>
+        </div>
     </div>
 </template>
 
@@ -22,98 +24,65 @@ import axios from '../services/axios'
 import ngrok from '../ngrok'
 
 export default {
-  name: 'Home',
-  data() {
-    {
-      return {
-        orginalPosts:[],
-        posts:[],
-      }
-    
-    } 
-  },
-  components: {
-    Navbar,
-    Search,
-    Sort,
-    PostRouter,
-  },
-  methods: {
-    async getAll() {
-        socket.emit('getData')
+    name: 'Home',
+    data() {
+        {
+            return {
+                orginalPosts: [],
+                posts: [],
+            }
+        } 
     },
-    isLogged() {
-      return sessionStorage.getItem("isLogged");
-      //return localStorage.getItem("isLogged");
+    components: {
+        Navbar,
+        Search,
+        Sort,
+        PostRouter,
     },
-    sortPosts(sort){
-      console.log("Sort");
-      if(sort) {
-        this.posts = this.posts.sort((a, b) =>
-          a.creation_date > b.creation_date ? -1 : 1
-          );
-      } else {
-          this.posts = this.posts.reverse();
-        //this.posts = this.posts.sort((a, b) =>
-          //a.creation_date > b.creation_date ? 1 : -1
-          //);
-      }
+    methods: {
+        async getAll() {
+            socket.emit('getData');
+        },
+        isLogged() {
+            return sessionStorage.getItem("isLogged");
+        },
+        sortPosts(sort) {
+            if (sort) {
+                this.posts = this.posts.sort((a, b) =>
+                    a.creation_date > b.creation_date ? -1 : 1
+                );
+            } else {
+                this.posts = this.posts.reverse();
+            }
+        },
+        async searchPosts(content) {
+            if (content.subreddit) {
+                const reg = new RegExp(".*" + content.content +".*");
+                this.posts = this.orginalPosts.filter(post => {
+                    return post.name.match(reg);
+                });
+            } else {
+                const reg = new RegExp(".*" + content.content +".*");
+                this.posts = this.orginalPosts.filter(post => {
+                    return  post.content.match(reg);
+                });
+            }
+        },
     },
-    async searchPosts(content) {
-      if(content.subreddit)
-      {
-        //const data = await axios.get(`http://localhost:3000/post/subreddit=${content.content}`)
-        //this.posts = data.data
-        const reg = new RegExp(".*" + content.content +".*")
-        this.posts = this.orginalPosts.filter(post => {
-          return post.name.match(reg)
-        })
-      }
-      else{
-        //const data = await axios.get(`http://localhost:3000/post/content=${content.content}`)
-        //this.posts = data.data
-        const reg = new RegExp(".*" + content.content +".*")
-        this.posts = this.orginalPosts.filter(post => {
-          return  post.content.match(reg)
-        })
-      }
-    },
-  },
-  async created() { 
-    //console.log(await axios.get("http://localhost:3000/user/"))
-        //const data = await axios.get("http://localhost:3000/post/")
-        const data = await axios.get(`${ngrok}/post/`)
-        //console.log(data.data)
+    async created() {
+        const data = await axios.get(`${ngrok}/post/`);
         this.posts = data.data;
         this.orginalPosts = data.data;
         socket.on('allPosts', async (posts) => {
-            // console.log('hello')
             console.log(posts.rows);
             this.posts = posts.rows;
         });
-        //console.log(posts)
-        //this.posts = data.rows
-        //console.log(this.posts)
-        //this.getAll();
-        //socket.on('getData',async (posts) => {
-        //console.log(posts.rows)
-        //this.posts = posts.rows
-        //this.posts.sort((a,b)=>a.id-b.id)
-        //this.posts = this.posts.filter(x => x.checked === false)
-        //this.posts.forEach(element => {
-        // console.log(element)                 
-        //});
-        //})
     }
 }
 </script>
 
-<style>
-.posts{
-  margin-top: 20px;
-}
-
-.header {
-  margin-top: 100px;
+<style scoped lang="scss">
+.posts {
+    margin-top: 1.5rem;
 }
 </style>
