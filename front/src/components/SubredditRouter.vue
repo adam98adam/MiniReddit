@@ -34,7 +34,7 @@ export default {
         expand() {
             this.showChangeSubreddit = !this.showChangeSubreddit;
             if (this.showChangeSubreddit) {
-                this.addChangeText = "Cancel";
+                this.addChangeText = "Hide";
             } else {
                 this.addChangeText = "Change";
             }

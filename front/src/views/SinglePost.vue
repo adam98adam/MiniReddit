@@ -9,7 +9,10 @@
             <div v-if="!checkCommets()" class="err">
                 <h2>{{this.error_message}}</h2>
             </div>
-            <button v-if="isLogged()" @click="expand" class="btn createComment">{{addCommentText}}</button>
+            <div v-if="checkCommets()">
+                <h2 style="color:whitesmoke;">Comments:</h2>
+            </div>
+            <button v-if="isLogged()" @click="expand" class="btn" style="margin-top:1.5rem; margin-bottom:1.5rem;"><a style="color:whitesmoke;">{{addCommentText}}</a></button>
             <div v-if="showAddComment">
                 <AddComment :post_id="posts[0].id"/>
             </div>
@@ -77,14 +80,14 @@ export default {
             if(this.comments.length > 0)
                 return true
             else {
-                this.error_message = "No Comments !!"
+                this.error_message = "No comments !!!"
                 return false
             }
         },
         expand() {
             this.showAddComment = !this.showAddComment;
             if (this.showAddComment) {
-                this.addCommentText = "Cancel";
+                this.addCommentText = "Hide";
             }
             else {
                 this.addCommentText = "Add Comment";
@@ -135,12 +138,6 @@ export default {
 
 .addPost {
     margin: 1rem;
-}
-
-.createComment {
-    margin-top: 2rem;
-    background: cadetblue !important;
-    border: 3px black solid !important;
 }
 
 .err {

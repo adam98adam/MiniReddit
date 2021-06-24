@@ -1,20 +1,20 @@
 <template>
-    <form @submit="onSubmit" class="add-form">
-        <div class="container">
-            <div class="form-control">
-                <label>Subreddit name</label>
+    <div class="container" style="padding:0; min-width:fit-content; width:50%; margin:auto;">
+        <form @submit="onSubmit" class="add-form" style="margin:auto; width:fit-content;">
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label for="subName" style="background-color: #247022; border:none;"><a style="color:whitesmoke;">Subreddit name</a></label><br>
                 <input type="text" v-model="subName" name="subName" placeholder="Add name" />
             </div>
-            <div class="form-control">
-                <label>Description</label>
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label for="subDescription" style="background-color: #247022; border:none;"><a style="color:whitesmoke;">Description</a></label><br>
                 <input type="text" v-model="subDescription" name="subDescription" placeholder="Add description" />
             </div>
-            <input type="submit" value="Confirm" class="btn subButton" />
+            <input type="submit" value="Confirm" class="btn" style="margin-top:4.5rem; margin-bottom:1.5rem;"/>
             <div id="error-message" v-if="errorMessage.isVisible" >
                 {{ errorMessage.content }}
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -107,19 +107,15 @@ export default {
     width: 100%;
     height: 3rem;
     padding: 0.5rem 0.5rem;
-    /* font-size: 17px; */
-}
-
-.subButton {
-    margin-top: 4rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background: greenyellow;
 }
 
 #error-message {
 	text-align: center;
 	color: red;
 	margin-top: 12px;
+}
+
+input[type=submit] {
+    color: whitesmoke;
 }
 </style>

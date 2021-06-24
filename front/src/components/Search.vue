@@ -11,8 +11,8 @@
         <div id="searchContent">
             <input v-model="this.data.content" type="text">
         </div>
-        <div class="searchButton">
-            <button @click="$emit('searchPosts',this.data)" id="innerSearchButton" class="btn"><a style="color:whitesmoke;"> Search </a></button>
+        <div id="searchButton">
+            <button @click="$emit('searchPosts',this.data)" id="innerSearchButton" class="btn btn-danger"><a style="color:whitesmoke;"> Search </a></button>
         </div>
     </div>
 </template>
@@ -39,11 +39,6 @@ export default {
 }
 
 #innerSearchButton {
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.searchButton {
     margin-right: auto;
     margin-left: auto;
 }
@@ -85,5 +80,6 @@ export default {
     text-align: center;
     display:flex;
     justify-content: center;
+    margin-top: 1.5rem;
 }
 </style>

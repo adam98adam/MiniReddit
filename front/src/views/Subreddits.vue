@@ -3,8 +3,8 @@
         <Navbar/>
         <div class="header">
             <h1>Subreddit list</h1>
-            <button v-if="isLogged()" @click="expand" class="btn createSubreddit">{{addSubredditText}}</button>
-            <div v-if="showAddSubreddit">
+            <button v-if="isLogged()" @click="expand" class="btn"><a style="color:whitesmoke;">{{addSubredditText}}</a></button>
+            <div v-if="showAddSubreddit" style="margin-bottom:1.5rem;">
                 <AddSubreddit :subreddits="this.subreddits"/>
             </div>
         </div>
@@ -49,7 +49,7 @@ export default {
         expand() {
             this.showAddSubreddit = !this.showAddSubreddit;
             if (this.showAddSubreddit) {
-                this.addSubredditText = "Cancel";
+                this.addSubredditText = "Hide";
             } else {
                 this.addSubredditText = "Create Subreddit";
             }
@@ -80,11 +80,5 @@ export default {
 
 .addPost {
     margin: 1rem;
-}
-
-.createSubreddit {
-    margin-top: 2rem;
-    background: cadetblue !important;
-    border: 3px black solid !important;
 }
 </style>

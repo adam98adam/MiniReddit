@@ -1,11 +1,11 @@
 <template>
     <form @submit="onSubmit" class="add-form">
         <div class="container">
-            <div class="form-control">
-                <label>Content</label>
+            <div class="form-control" style="background-color: #247022; border:none; margin-top:0rem;">
+                <label><a style="color:whitesmoke;">Content</a></label>
                 <input type="text" v-model="content" name="content" placeholder="Add content" />
             </div>
-            <input type="submit" value="Confirm" class="btn commentButton" />
+            <input type="submit" value="Confirm" class="btn" style="margin-top:4.5rem; margin-bottom:0rem;"/>
             <div id="error-message" v-if="errorMessage.isVisible" >
                 {{ errorMessage.content }}
             </div>
@@ -104,16 +104,17 @@ export default {
     /* font-size: 17px; */
 }
 
-.commentButton {
-    margin-top: 4rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background: greenyellow;
-}
-
 #error-message {
 	text-align: center;
 	color: red;
 	margin-top: 12px;
+}
+
+input[type=submit] {
+    color: whitesmoke;
+}
+
+input[type=text] {
+    color: whitesmoke;
 }
 </style>

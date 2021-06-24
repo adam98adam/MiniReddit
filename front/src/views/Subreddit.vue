@@ -8,7 +8,7 @@
                     <p>Want to post in r/{{ name }} ?</p>
                     <button @click="joinSubreddit" class="btn joinSubreddit">Join now!</button>
                 </div>
-                <button v-if="isSubredditUser" @click="expand" class="btn createPost">{{addPostText}}</button>
+                <button v-if="isSubredditUser" @click="expand" class="btn" style="margin-bottom:2rem;"><a style="color:whitesmoke;">{{addPostText}}</a></button>
                 <div v-if="showAddPost">
                     <AddPost :name="this.name" :posts="this.posts"/>
                 </div>
@@ -71,7 +71,7 @@ export default {
         expand() {
             this.showAddPost = !this.showAddPost;
             if (this.showAddPost)
-                this.addPostText = "Cancel";
+                this.addPostText = "Hide";
             else
                 this.addPostText = "Create Post";
         },
@@ -118,12 +118,6 @@ h1 {
 
 .header {
     margin-top: 100px;
-}
-
-.createPost {
-    margin-top: 2rem;
-    background: cadetblue !important;
-    border: 3px black solid !important;
 }
 
 .joinSubreddit {

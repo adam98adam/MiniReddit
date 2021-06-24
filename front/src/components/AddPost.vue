@@ -1,23 +1,23 @@
 <template>
     <form @submit="onSubmit" class="add-form">
         <div class="container">
-            <div class="form-control">
-                <label>Title</label>
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label><a style="color:whitesmoke;">Title</a></label>
                 <input type="text" v-model="title" name="title" placeholder="Add title" />
             </div>
-            <div class="form-control">
-                <label>Content</label>
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label><a style="color:whitesmoke;">Content</a></label>
                 <input type="text" v-model="content" name="content" placeholder="Add content" />
             </div>
-            <div class="form-control">
-                <label>Image path</label>
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label><a style="color:whitesmoke;">Image path</a></label>
                 <input type="file" @change="uploadFile($event)" name="image_path" placeholder="Add image path" />
             </div>
-            <div class="form-control">
-                <label>Video url</label>
+            <div class="form-control" style="background-color: #247022; border:none;">
+                <label><a style="color:whitesmoke;">Video url</a></label>
                 <input type="text" v-model="video_url" name="video_url" placeholder="Add video url" />
             </div>
-            <input type="submit" value="Confirm" class="btn postButton" />
+            <input type="submit" value="Confirm" class="btn" style="margin-top:4.5rem; margin-bottom:0rem;"/>
             <div id="error-message" v-if="errorMessage.isVisible" >
                 {{ errorMessage.content }}
             </div>
@@ -150,16 +150,17 @@ export default {
     /* font-size: 17px; */
 }
 
-.postButton {
-    margin-top: 4rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background: greenyellow;
-}
-
 #error-message {
 	text-align: center;
 	color: red;
 	margin-top: 12px;
+}
+
+input[type=submit] {
+    color: whitesmoke;
+}
+
+input[type=file] {
+    color: whitesmoke;
 }
 </style>
