@@ -10,8 +10,8 @@
             <br/>
             <a style="color:whitesmoke;">{{this.time}}</a>
         </div>
-        <div id="counter"><a style="color:whitesmoke;">{{this.counter}}</a></div>
-        <!-- <div id="counter">{{this.votes}}</div> -->
+        <!--<div id="counter"><a style="color:whitesmoke;">{{this.counter}}</a></div>-->
+        <div id="counter"><a style="color:whitesmoke;">{{this.votes}}</a></div> 
         <div id="title"><a style="color:#000000;">Title : {{this.title}}</a></div>
         <div id="error" v-if="errorMessage.isVisible"><a>{{ errorMessage.content }}</a></div>
         <div id="content"><a style="color:whitesmoke;">{{this.content}}</a></div>
@@ -27,7 +27,7 @@
 <script>
 import socket from '../socketConnection'
 import moment from 'moment'
-import axios from 'axios'
+//import axios from 'axios'
 import ngrok from '../ngrok'
 
 export default {
@@ -38,8 +38,8 @@ export default {
             return {
                 video_url_local: this.video_url,
                 time:'',
-                counter:0,
-                // votes: this.post_votes,
+                //counter:0,
+                votes: this.post_votes,
                 errorMessage: {
                     isVisible: false,
                     content:""
@@ -84,6 +84,7 @@ export default {
             )
             return this.video_url_local;
         },
+        /*
         async giveLike() {
             if(sessionStorage.getItem("isLogged")) {
                 console.log("giveLike")
@@ -100,26 +101,25 @@ export default {
                 this.showErrorMessage("Log in to vote");
             }
         },
-        // async giveLike() {
-        //     if(sessionStorage.getItem("isLogged")) {
-        //         console.log("giveLike")
-        //         //socket post like
-        //         socket.emit("postLikes",{post_id: this.id, vote: 1, subreddit_name: this.subreddit_name, nickname: sessionStorage.getItem("nickname")})
-        //         //await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
-        //     } else {
-        //         this.showErrorMessage("Log in to vote");
-        //     }
-        // },
-        // async giveDislike() {
-        //     if(sessionStorage.getItem("isLogged")) {
-        //         console.log("giveDislake")
-        //         //socket post dislike
-        //         socket.emit("postLikes",{post_id: this.id, vote: -1, subreddit_name: this.subreddit_name ,nickname: sessionStorage.getItem("nickname")})
+        */
+         async giveLike() {
+             if(sessionStorage.getItem("isLogged")) {
+                 console.log("giveLike")
+                 socket.emit("postLikes",{post_id: this.id, vote: 1, subreddit_name: this.subreddit_name, nickname: sessionStorage.getItem("nickname")})
+                 //await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=1`)
+             } else {
+                 this.showErrorMessage("Log in to vote");
+             }
+         },
+         async giveDislike() {
+             if(sessionStorage.getItem("isLogged")) {
+                 console.log("giveDislake")
+                 socket.emit("postLikes",{post_id: this.id, vote: -1, subreddit_name: this.subreddit_name ,nickname: sessionStorage.getItem("nickname")})
         //         // await axios.get(`${ngrok}/post_vote/post_id=${this.id}/vote=-1`)
-        //     } else {
-        //         this.showErrorMessage("Log in to vote");
-        //     }
-        // },
+             } else {
+                 this.showErrorMessage("Log in to vote");
+             }
+         },
         async goToComments() {
             console.log();
             this.$router.push(`/r/${this.subreddit_name}/${this.id}`);
@@ -129,14 +129,15 @@ export default {
         this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         this.counter = this.post_votes;
 
+
         // this.time = moment(String(this.creation_date)).format('DD/MM/YYYY hh:mm');
         // this.votes = this.post_votes;
-        // socket.on("getVotes",(data) => {
-        //     if(this.id === data.post_id) {
-        //         this.votes = data.votes;
-        //         this.showErrorMessage(data.error_message);
-        //     }
-        // });
+         socket.on("getVotes",(data) => {
+             if(this.id === data.post_id) {
+                 this.votes = data.votes;
+                 this.showErrorMessage(data.error_message);
+             }
+         });
     }
 }
 </script>

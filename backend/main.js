@@ -26,12 +26,12 @@ const socket = require("socket.io");
 
 const sessionMiddleware = session({ secret: "changeit", resave: false, saveUninitialized: false });
 const app = express();
-app.use(cors({origin: "http://localhost:8080", credentials: true}));
+app.use(cors({origin: "http://192.168.1.13:3000", credentials: true}));
 //app.use(cors({origin: "http://a40c670e2b8a.eu.ngrok.io", credentials: true}));
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-app.use("", express.static("../front/dist/"));
+app.use(express.static("../front/dist/"));
 //app.use(express.static('../public'))
 
 /*
@@ -59,6 +59,8 @@ app.use(passport.session());
 const LocalStrategy = require("passport-local").Strategy;
 // const { use } = require("./routes/auth");
 const client = require("./exports/postgres");
+const { user } = require("./exports/postgres");
+const { post } = require("./routes/auth");
 
 const REDDIT_USER = {
     id: 0,
@@ -129,7 +131,7 @@ const io = socket(
     server,
     {
         cors: {
-            origin: "http://localhost:8080",
+            origin: "http://192.168.1.13:3000",
             //origin: "http://a40c670e2b8a.eu.ngrok.io",
             methods: ["GET","POST","PUT","DELETE"]
         }
@@ -241,11 +243,19 @@ io.sockets.on("connect", (socket) => {
     });
 
     socket.on("changeSubreddit", async (changeSubreddit) => {
+        const sub = await pg.query(`SELECT * FROM subreddit where id !=${changeSubreddit.id} and name ='${changeSubreddit.name}' `)
+        if(sub.rows[0]){
+            const subreddits = await pg.query("SELECT * FROM subreddit;");
+            io.to(socket.id).emit('getSubredditsFalse');
+            io.sockets.emit('getSubreddits', subreddits);
+        }
+        else{
         console.log("123: ", changeSubreddit.id);
         await pg.query(`UPDATE subreddit SET name='${changeSubreddit.name}', description='${changeSubreddit.description}' WHERE id=${changeSubreddit.id};`);
 
         const subreddits = await pg.query("SELECT * FROM subreddit;");
         io.sockets.emit('getSubreddits', subreddits);
+        }
     });
 
     socket.on("getSubredditUser", async (data) => {
@@ -339,39 +349,46 @@ io.sockets.on("connect", (socket) => {
         io.sockets.emit('allComments', {comments: all_comments.rows, post_id: data.post_id});
     });
 
+
+    
     socket.on("postLikes", async(data) => {
         const user_id = await pg.query(`SELECT id FROM reddit_user where nickname = '${data.nickname}';`);
         const postVote = await pg.query(
-            "select * from post_vote where post_id = $1 and user_id = $2;",
+            "SELECT * FROM post_vote WHERE post_id = $1 and user_id = $2;",
             [data.post_id, user_id.rows[0].id]
         );
 
-        // if (postVote.rows[0]) {
-        //     if (postVote.rows[0].vote === data.vote) {
-        //         await pg.query(
-        //             "delete from post_vote where post_id = $1 and user_id = $2",
-        //             [data.post_id,user_id.rows[0].id]
-        //         );
-        //         const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
-        //         io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been revoked by ${data.nickname};`});
-        //         io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been revoked by you`});
-        //     } else {
-        //         await pg.query(
-        //             "update post_vote set vote = $1 where post_id = $2 and user_id = $3;",
-        //             [data.vote, data.post_id,user_id.rows[0].id]
-        //         );
-        //         const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
-        //         io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been changed by ${data.nickname};`});
-        //         io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been changed by you`});
-        //     }
-        // } else {
-        //     await pg.query(
-        //         `insert into post_vote(vote, user_id, post_id) values($1, $2, $3) RETURNING ID;`,
-        //         [data.vote, user_id.rows[0].id, data.post_id]
-        //     );
-        //     const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
-        //     io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been added by ${data.nickname};`});
-        //     io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `Vote has been added by you`});
-        // }
+         if (postVote.rows[0]) {
+             if (postVote.rows[0].vote === data.vote) {
+                 await pg.query(
+                     "DELETE FROM post_vote WHERE post_id = $1 and user_id = $2",
+                     [data.post_id,user_id.rows[0].id]
+                 );
+                 const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+                 io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been revoked by ${data.nickname}`});
+                 io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `You deleted a vote`});
+             } else {
+                 await pg.query(
+                     "Update post_vote SET vote = $1 WHERE post_id = $2 and user_id = $3;",
+                     [data.vote, data.post_id,user_id.rows[0].id]
+                 );
+                 const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+                 io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been changed by ${data.nickname}`});
+                 io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `You changed your previous vote`});
+             }
+         } else {
+             await pg.query(
+                 `INSERT INTO post_vote(vote, user_id, post_id) VALUES($1, $2, $3) RETURNING ID;`,
+                 [data.vote, user_id.rows[0].id, data.post_id]
+             );
+             const getPost = await pg.query(`select case when sum(vote) is null then 0 else sum(vote) end as votes from post_vote v where v.post_id = ${data.post_id};`);
+             io.sockets.emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id, error_message: `Vote has been added by ${data.nickname}`});
+             io.to(socket.id).emit('getVotes', {votes: getPost.rows[0].votes, post_id: data.post_id,error_message: `You added a vote`});
+         }
+        
+
+
+
+
     });
 });

@@ -65,6 +65,13 @@ export default {
             this.changeDescription = '';
         },
     },
+    created() {
+        socket.on('getSubredditsFalse',() => {
+            this.showErrorMessage('This subreddit name already exist')
+        }
+        )
+
+    },
 }
 </script>
 
