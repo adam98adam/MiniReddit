@@ -4,7 +4,7 @@ Application is a copy of a reddit. I use Socket.IO JavaScript Library, so every 
 </p>
 <br>
 <p align="center">
-Homepage
+Guest Homepage
 </p>
 <img src="images/Homepage.png">
 <br>
@@ -17,3 +17,21 @@ Login
 Register
 </p>
 <img src="images/Register.png">
+<br>
+<p align="center">
+Subreddits
+</p>
+<img src="images/Subreddits.png">
+<br>
+<p align="center">
+User Homepage 
+</p>
+<img src="images/HomepageLogin.png">
+<br>
+<p align="center">
+Single Post 
+</p>
+<img src="images/SinglePost.png">
+
+
+
